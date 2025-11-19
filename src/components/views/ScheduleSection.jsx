@@ -41,6 +41,37 @@ export default function ScheduleSection() {
         setSchedule(newSchedule);
     };
 
+    // Highlight current time slot
+    const [activeSlotIndex, setActiveSlotIndex] = useState(-1);
+    const [currentDay, setCurrentDay] = useState('');
+
+    useEffect(() => {
+        const updateActiveSlot = () => {
+            const now = new Date();
+            const days = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+            const today = days[now.getDay()];
+            setCurrentDay(today);
+
+            const currentMinutes = now.getHours() * 60 + now.getMinutes();
+
+            const index = schedule.findIndex(slot => {
+                const [start, end] = slot.time.split(' - ');
+                const [startHour, startMin] = start.split(':').map(Number);
+                const [endHour, endMin] = end.split(':').map(Number);
+
+                const startTotal = startHour * 60 + startMin;
+                const endTotal = endHour * 60 + endMin;
+
+                return currentMinutes >= startTotal && currentMinutes < endTotal;
+            });
+            setActiveSlotIndex(index);
+        };
+
+        updateActiveSlot();
+        const interval = setInterval(updateActiveSlot, 60000); // Update every minute
+        return () => clearInterval(interval);
+    }, [schedule]);
+
     return (
         <div className="mb-8 bg-white dark:bg-gray-800 rounded-2xl shadow-md border border-gray-200 dark:border-gray-700 overflow-hidden transition-colors">
             <button
@@ -75,22 +106,32 @@ export default function ScheduleSection() {
                             </tr>
                         </thead>
                         <tbody>
-                            {schedule.map((row, rowIndex) => (
-                                <tr key={rowIndex}>
-                                    <td className="p-2 text-xs border dark:border-gray-600 font-medium text-gray-700 dark:text-gray-300">{row.time}</td>
-                                    {['mon', 'tue', 'wed', 'thu', 'fri'].map(day => (
-                                        <td
-                                            key={day}
-                                            className={`p-2 text-xs border dark:border-gray-600 ${row.isBreak ? 'bg-gray-100 dark:bg-gray-600 font-bold' : ''} ${isEditMode && !row.isBreak ? 'border-2 border-amber-400 bg-amber-50 dark:bg-amber-900/20 cursor-text' : ''}`}
-                                            contentEditable={isEditMode && !row.isBreak}
-                                            suppressContentEditableWarning={true}
-                                            onBlur={(e) => handleCellChange(rowIndex, day, e.target.innerText)}
-                                        >
-                                            {row[day]}
+                            {schedule.map((row, rowIndex) => {
+                                const isActive = rowIndex === activeSlotIndex;
+                                return (
+                                    <tr key={rowIndex} className={`transition-colors ${isActive ? 'bg-amber-50 dark:bg-amber-900/30 border-l-4 border-l-amber-500' : ''}`}>
+                                        <td className="p-2 text-xs border dark:border-gray-600 font-medium text-gray-700 dark:text-gray-300">
+                                            {row.time}
+                                            {isActive && <span className="ml-1 text-amber-600 font-bold animate-pulse">●</span>}
                                         </td>
-                                    ))}
-                                </tr>
-                            ))}
+                                        {['mon', 'tue', 'wed', 'thu', 'fri'].map(day => (
+                                            <td
+                                                key={day}
+                                                className={`p-2 text-xs border dark:border-gray-600 
+                                                    ${row.isBreak ? 'bg-gray-100 dark:bg-gray-600 font-bold' : ''} 
+                                                    ${isEditMode && !row.isBreak ? 'border-2 border-amber-400 bg-amber-50 dark:bg-amber-900/20 cursor-text' : ''}
+                                                    ${day === currentDay && isActive ? 'bg-amber-100 dark:bg-amber-800/50 font-bold text-amber-900 dark:text-amber-100' : ''}
+                                                `}
+                                                contentEditable={isEditMode && !row.isBreak}
+                                                suppressContentEditableWarning={true}
+                                                onBlur={(e) => handleCellChange(rowIndex, day, e.target.innerText)}
+                                            >
+                                                {row[day]}
+                                            </td>
+                                        ))}
+                                    </tr>
+                                );
+                            })}
                         </tbody>
                     </table>
                 </div>

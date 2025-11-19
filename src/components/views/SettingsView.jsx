@@ -106,6 +106,36 @@ export default function SettingsView() {
                     </p>
                 </div>
 
+                {/* School Settings Section */}
+                <div className="mb-8">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Inicio del Ciclo Escolar
+                    </label>
+                    <div className="flex gap-2">
+                        <input
+                            type="date"
+                            id="schoolStartDate"
+                            className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-amber-500 focus:border-amber-500 dark:bg-gray-700 dark:text-white"
+                        />
+                        <button
+                            onClick={() => {
+                                const date = document.getElementById('schoolStartDate').value;
+                                if (date) {
+                                    localStorage.setItem('school_settings', JSON.stringify({ startDate: date }));
+                                    // Force reload to apply changes across app (simple way for now)
+                                    window.location.reload();
+                                }
+                            }}
+                            className="bg-amber-600 text-white px-4 py-2 rounded-lg hover:bg-amber-700 transition-colors font-medium"
+                        >
+                            Guardar Fecha
+                        </button>
+                    </div>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
+                        Define cuándo inicia el ciclo para calcular automáticamente la semana actual.
+                    </p>
+                </div>
+
                 <hr className="border-gray-200 dark:border-gray-700 my-8" />
 
                 {/* PDF Import Section */}
@@ -139,8 +169,8 @@ export default function SettingsView() {
                     {/* Status Messages */}
                     {statusMessage && (
                         <div className={`mt-4 p-4 rounded-lg flex items-center gap-2 ${statusType === 'success' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-200' :
-                                statusType === 'error' ? 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-200' :
-                                    'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-200'
+                            statusType === 'error' ? 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-200' :
+                                'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-200'
                             }`}>
                             {statusType === 'success' && <CheckCircleIcon className="w-5 h-5" />}
                             {statusType === 'error' && <ExclamationCircleIcon className="w-5 h-5" />}

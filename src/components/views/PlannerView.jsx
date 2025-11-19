@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
-import { curriculumData } from '../../data/curriculum';
+import { useCurriculum } from '../../hooks/useCurriculum';
 import { ChevronDownIcon, SparklesIcon } from '@heroicons/react/24/outline';
 
 export default function PlannerView() {
+    const { curriculum } = useCurriculum();
     const [activeGrade, setActiveGrade] = useState('2');
     const [openTrimesters, setOpenTrimesters] = useState({});
     const [openWeeks, setOpenWeeks] = useState({});
 
-    const currentCurriculum = curriculumData[activeGrade];
+    const currentCurriculum = curriculum[activeGrade];
 
     const toggleTrimester = (grade, index) => {
         const key = `${grade}-${index}`;
