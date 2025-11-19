@@ -1,0 +1,21 @@
+{
+  "name": "Planeación Interactiva de Computación con IA",
+  "short_name": "Planeación IA",
+  "description": "Asistente digital para profesores de computación",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FDFBF8",
+  "theme_color": "#A0522D",
+  "icons": [
+    {
+      "src": "pwa-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "pwa-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

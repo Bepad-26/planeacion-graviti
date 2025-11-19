@@ -1,0 +1,282 @@
+export const curriculumData = {
+    '2': {
+        grade: '2º',
+        title: '2º de Primaria - El Explorador Creativo',
+        description: 'En este nivel los alumnos inician su camino en el mundo digital, aprendiendo a conocer la computadora como una herramienta de exploración y juego creativo. El objetivo principal es desarrollar la motricidad fina, familiarizarse con el entorno de Windows y descubrir la expresión artística en Paint, Word y PowerPoint.',
+        trimesters: [
+            {
+                title: 'Trimestre 1: Exploración de Windows y Microsoft Paint',
+                theme: 'Exploración de Windows y Microsoft Paint',
+                concepts: 'Partes de la computadora, escritorio, iconos. Lápiz, pincel, cubeta, formas.',
+                project: '"Mi Escritorio, Mi Mundo" y "Monster of Colors / Monstruo de Colores".',
+                evaluation: "Evaluación continua (50%): Proyecto 'Mi Escritorio' (20%), Proyecto 'Monster of Colors' (20%), Participación y organización (10%). Examen práctico (50%).",
+                weeks: [
+                    { week: 'Semana 1 (1-5 Sep)', class1: '<b>"Conociendo mi Equipo"</b>.', class2: '<b>"El Mouse: Nuestro Puntero Mágico"</b>' },
+                    { week: 'Semana 2 (8-12 Sep)', class1: '<b>"Dominando el Clic y Arrastre"</b>.', class2: '<b>"El Escritorio Mágico"</b>.' },
+                    { week: 'Semana 3 (15-19 Sep)', class1: '<b>"Mi Primer Trazo en Paint"</b>.', class2: '<b>"La Magia del Color"</b>.' },
+                    { week: 'Semana 4 (22-26 Sep)', class1: '<b>"Pinceles y Texturas"</b>.', class2: '<b>"Guardando mi Tesoro"</b>.' },
+                    { week: 'Semana 5 (29 Sep-3 Oct)', class1: '<b>"Mi Firma de Artista"</b>.', class2: '<b>Repaso con Kahoot</b>.' },
+                    { week: 'Semana 6 (6-10 Oct)', class1: '<b>"Un Mundo a mi Gusto"</b>.', class2: '<b>Inicio del Proyecto "Monster of Colors"</b>.' },
+                    { week: 'Semana 7 (13-17 Oct)', class1: 'Dar color y detalles al "Monster of Colors".', class2: 'Repaso para el examen parcial.' },
+                    { week: 'Semana 8 (20-24 Oct)', class1: 'Actividades de reforzamiento.', class2: '<b>Examen Parcial 1</b>.' },
+                    { week: 'Semana 9 (27-31 Oct)', class1: 'Reforzamiento de conceptos.', class2: 'Juegos interactivos sobre Windows.' },
+                    { week: 'Semana 10 (3-7 Nov)', class1: 'Práctica libre en Paint.', class2: 'Desafíos creativos en Paint.' },
+                    { week: 'Semana 11 (10-14 Nov)', class1: 'Organización de carpetas y archivos.', class2: '<b>Repaso con Kahoot</b> para segundo parcial.' },
+                    { week: 'Semana 12 (17-21 Nov)', class1: 'Repaso final.', class2: 'Cierre de proyectos del trimestre.' },
+                ]
+            },
+            {
+                title: 'Trimestre 2: Windows y Microsoft Word',
+                theme: 'Windows y Microsoft Word',
+                concepts: 'Carpetas, guardar archivos, texto básico. Insertar imágenes, formas, texto.',
+                project: '"Treasure Folder / Carpeta del Tesoro" y "Fantastic Animal / Animal Fantástico".',
+                evaluation: "Evaluación continua (50%): Proyecto 'Treasure Folder' (20%), Proyecto 'Fantastic Animal' (20%), Prácticas en clase (10%). Examen práctico (50%).",
+                weeks: [
+                    { week: 'Semana 1 (24-28 Nov)', class1: '<b>"La Casa de mis Archivos"</b>.', class2: '<b>Introducción a Microsoft Word</b>.' },
+                    { week: 'Semana 2 (1-5 Dic)', class1: '<b>"Mis Primeras Letras"</b>.', class2: '<b>"Letras de Colores"</b>.' },
+                    { week: 'Semana 3 (8-12 Dic)', class1: 'Práctica libre de formato de texto.', class2: '<b>"Dándole Vida al Texto"</b>.' },
+                    { week: 'Semana 4 (15-19 Dic)', class1: '<b>"Una Imagen para mi Cuento"</b>.', class2: '<b>Repaso con Kahoot</b>.' },
+                    { week: 'Semana 5 (5-9 Ene)', class1: '<b>Inicio del Proyecto "Fantastic Animal"</b>.', class2: 'Aplicar formato de texto al proyecto.' },
+                    { week: 'Semana 6 (12-16 Ene)', class1: 'Ilustrar el "Fantastic Animal" con formas.', class2: 'Ilustrar el "Fantastic Animal" con imágenes.' },
+                    { week: 'Semana 7 (19-23 Ene)', class1: 'Revisión y práctica del proyecto.', class2: 'Repaso para el parcial.' },
+                    { week: 'Semana 8 (26-30 Ene)', class1: 'Actividades de reforzamiento.', class2: '<b>Examen Parcial 1 (T2)</b>.' },
+                    { week: 'Semana 9 (2-6 Feb)', class1: 'Práctica de integración: Word y Paint.', class2: 'Desafíos de formato en Word.' },
+                    { week: 'Semana 10 (9-13 Feb)', class1: 'Cierre del proyecto "Fantastic Animal".', class2: '<b>Repaso con Kahoot</b>.' },
+                    { week: 'Semana 11 (16-20 Feb)', class1: 'Repaso para segundo parcial.', class2: 'Juegos interactivos de Word.' },
+                    { week: 'Semana 12 (23-27 Feb)', class1: 'Repaso final.', class2: 'Cierre de proyectos del trimestre.' },
+                ]
+            },
+            {
+                title: 'Trimestre 3: Microsoft PowerPoint e Integración Final',
+                theme: 'Microsoft PowerPoint e Integración Final',
+                concepts: 'Crear diapositiva, insertar texto e imágenes. Uso de Word, Paint, PowerPoint.',
+                project: '"Digital Art Gallery / Galería de Arte Digital" y "About Me / Sobre Mí".',
+                evaluation: "Evaluación continua (50%): Proyecto 'Digital Art Gallery' (25%), Participación (10%), Avances 'About Me' (15%). Proyecto final 'About Me' (50%).",
+                weeks: [
+                    { week: 'Semana 1 (2-6 Mar)', class1: '<b>Introducción a PowerPoint</b>.', class2: '<b>"Títulos y Textos"</b>.' },
+                    { week: 'Semana 2 (9-13 Mar)', class1: '<b>"Una Galería de Imágenes"</b>.', class2: 'Práctica de inserción y ajuste de tamaño.' },
+                    { week: 'Semana 3 (16-20 Mar)', class1: '<b>Inicio del Proyecto "Digital Art Gallery"</b>.', class2: 'Desarrollo del proyecto.' },
+                    { week: 'Semana 4 (23-27 Mar)', class1: 'Cierre del proyecto "Digital Art Gallery".', class2: '<b>Repaso con Kahoot</b>.' },
+                    { week: 'Semana 5 (13-17 Abr)', class1: '<b>Inicio del Proyecto "About Me"</b>.', class2: '<b>Examen Parcial 1 (T3)</b>.' },
+                    { week: 'Semana 6 (20-24 Abr)', class1: 'Desarrollo "About Me": Redacción en Word.', class2: 'Desarrollo "About Me": Creación de gráficos en Paint.' },
+                    { week: 'Semana 7 (27 Abr-1 May)', class1: 'Desarrollo "About Me": Integración en PowerPoint.', class2: 'Práctica de presentación.' },
+                    { week: 'Semana 8 (4-8 May)', class1: 'Revisión y mejora del proyecto final.', class2: 'Ensayo de la presentación.' },
+                    { week: 'Semana 9 (11-15 May)', class1: 'Actividades de reforzamiento.', class2: 'Juegos de repaso de integración.' },
+                    { week: 'Semana 10 (18-22 May)', class1: 'Ensayo de la presentación final.', class2: '<b>Repaso con Kahoot</b>.' },
+                    { week: 'Semana 11 (25-29 May)', class1: 'Presentación final de proyectos.', class2: '<b>Examen Parcial 2 (T3)</b>.' },
+                    { week: 'Semana 12 (1-5 Jun)', class1: 'Repaso general del ciclo.', class2: 'Actividad de cierre.' },
+                ]
+            }
+        ]
+    },
+    '3': {
+        grade: '3º',
+        title: '3º de Primaria - El Arquitecto de la Información',
+        description: 'En tercer grado los alumnos avanzan hacia la organización de información digital, combinando creatividad con estructura. Se introduce la búsqueda segura en internet, la creación de documentos formales en Word, presentaciones animadas en PowerPoint y el uso básico de Excel.',
+        trimesters: [
+            {
+                title: 'Trimestre 1: Internet, Ciberseguridad y Word',
+                theme: 'Internet, Ciberseguridad, Windows + Word',
+                concepts: 'Búsqueda segura, identificar anuncios. Subcarpetas, formato de párrafo, listas.',
+                project: '"Digital Photo Safari / Safari Fotográfico Digital" y "Super Team Manifesto / Manifiesto del Súper Equipo".',
+                evaluation: "Evaluación continua (50%): Proyecto 'Safari' (20%), Proyecto 'Manifiesto' (20%), Prácticas (10%). Examen práctico (50%).",
+                weeks: [
+                    { week: 'Semana 1 (1-5 Sep)', class1: '<b>"¿Qué es Internet?"</b>: Reglas de seguridad.', class2: '<b>"Nuestro Navegador"</b>: Partes y funciones.' },
+                    { week: 'Semana 2 (8-12 Sep)', class1: '<b>"Búsqueda Segura"</b>: Uso de Kiddle.', class2: '<b>"La Casa de mis Archivos"</b>.' },
+                    { week: 'Semana 3 (15-19 Sep)', class1: 'Inicio del Proyecto "Digital Photo Safari".', class2: '<b>"Organización Avanzada"</b>: Subcarpetas.' },
+                    { week: 'Semana 4 (22-26 Sep)', class1: '<b>"Dando Formato al Párrafo"</b>.', class2: '<b>Repaso con Kahoot</b>.' },
+                    { week: 'Semana 5 (29 Sep-3 Oct)', class1: '<b>"Listas y Viñetas"</b>.', class2: 'Inicio del Proyecto "Super Team Manifesto".' },
+                    { week: 'Semana 6 (6-10 Oct)', class1: 'Redacción y diseño del Manifiesto.', class2: 'Cierre de proyectos y revisión final.' },
+                    { week: 'Semana 7 (13-17 Oct)', class1: 'Repaso general para el examen parcial.', class2: 'Actividades prácticas de formato en Word.' },
+                    { week: 'Semana 8 (20-24 Oct)', class1: 'Último repaso.', class2: '<b>Examen Parcial 1 (T1)</b>.' },
+                    { week: 'Semana 9 (27-31 Oct)', class1: 'Reforzamiento de formato en Word.', class2: 'Práctica de organización de archivos.' },
+                    { week: 'Semana 10 (3-7 Nov)', class1: 'Desafío de formato en Word.', class2: 'Juegos de ciberseguridad.' },
+                    { week: 'Semana 11 (10-14 Nov)', class1: 'Repaso para segundo parcial.', class2: '<b>Repaso con Kahoot</b> de formato avanzado.' },
+                    { week: 'Semana 12 (17-21 Nov)', class1: 'Repaso final.', class2: 'Cierre de trimestre.' },
+                ]
+            },
+            {
+                title: 'Trimestre 2: PowerPoint y Word',
+                theme: 'Microsoft PowerPoint y Word + PowerPoint',
+                concepts: 'Temas de diseño, transiciones, animaciones. Integración de texto, ortografía.',
+                project: '"Water Drop Journey / El Viaje de la Gota de Agua" y "Newsroom / Sala de Noticias".',
+                evaluation: "Evaluación continua (50%): Proyecto 'Water Drop' (20%), Proyecto 'Newsroom' (20%), Prácticas (10%). Presentación (50%).",
+                weeks: [
+                    { week: 'Semana 1 (24-28 Nov)', class1: '<b>Introducción a PowerPoint</b>.', class2: '<b>"Dando Movimiento"</b>: Aplicar transiciones.' },
+                    { week: 'Semana 2 (1-5 Dic)', class1: '<b>"Animando Elementos"</b>.', class2: 'Práctica libre de transiciones y animaciones.' },
+                    { week: 'Semana 3 (8-12 Dic)', class1: 'Inicio del Proyecto "Water Drop Journey".', class2: 'Desarrollo del proyecto.' },
+                    { week: 'Semana 4 (15-19 Dic)', class1: 'Cierre del proyecto "Water Drop Journey".', class2: '<b>Repaso con Kahoot</b>.' },
+                    { week: 'Semana 5 (5-9 Ene)', class1: 'Inicio del Proyecto "Newsroom".', class2: 'Creación de la presentación en PowerPoint.' },
+                    { week: 'Semana 6 (12-16 Ene)', class1: 'Desarrollo "Newsroom": Insertar imágenes.', class2: 'Desarrollo "Newsroom": Aplicar animaciones.' },
+                    { week: 'Semana 7 (19-23 Ene)', class1: 'Ensayo de la presentación.', class2: '<b>Examen Parcial 1 (T2)</b>.' },
+                    { week: 'Semana 8 (26-30 Ene)', class1: 'Reforzamiento de PowerPoint.', class2: 'Práctica de integración Word-PowerPoint.' },
+                    { week: 'Semana 9 (2-6 Feb)', class1: 'Mejora de proyectos "Newsroom".', class2: 'Grabación de noticieros.' },
+                    { week: 'Semana 10 (9-13 Feb)', class1: 'Ensayo final y grabación del noticiero.', class2: '<b>Repaso con Kahoot</b>.' },
+                    { week: 'Semana 11 (16-20 Feb)', class1: 'Repaso para segundo parcial.', class2: 'Presentación de noticieros.' },
+                    { week: 'Semana 12 (23-27 Feb)', class1: 'Repaso final.', class2: 'Cierre de trimestre.' },
+                ]
+            },
+            {
+                title: 'Trimestre 3: Excel e Integración Final',
+                theme: 'Microsoft Excel e Integración Final',
+                concepts: 'Celdas, filas, columnas, formato de tabla. Uso de Word, Excel, PowerPoint.',
+                project: '"Backpack Inventory / Inventario de Mochila" y Exposición digital bilingüe.',
+                evaluation: "Evaluación continua (50%): Proyecto 'Inventory' (25%), Participación (10%), Avances del portafolio (15%). Proyecto final (50%).",
+                weeks: [
+                    { week: 'Semana 1 (2-6 Mar)', class1: '<b>Introducción a Excel</b>.', class2: 'Ingresar y editar datos en una tabla.' },
+                    { week: 'Semana 2 (9-13 Mar)', class1: '<b>"Dando Color a los Datos"</b>.', class2: 'Ajustar tamaño de celdas.' },
+                    { week: 'Semana 3 (16-20 Mar)', class1: 'Inicio del Proyecto "Backpack Inventory".', class2: 'Aplicar formato a la tabla del inventario.' },
+                    { week: 'Semana 4 (23-27 Mar)', class1: 'Cierre del proyecto "Backpack Inventory".', class2: '<b>Repaso con Kahoot</b>.' },
+                    { week: 'Semana 5 (13-17 Abr)', class1: 'Inicio del proyecto final: Exposición digital.', class2: '<b>Examen Parcial 1 (T3)</b>.' },
+                    { week: 'Semana 6 (20-24 Abr)', class1: 'Planificación y investigación del proyecto final.', class2: 'Creación de contenido en Word.' },
+                    { week: 'Semana 7 (27 Abr-1 May)', class1: 'Creación de tablas o gráficos en Excel.', class2: 'Diseño de la presentación en PowerPoint.' },
+                    { week: 'Semana 8 (4-8 May)', class1: 'Integración de todos los elementos.', class2: 'Revisión y práctica.' },
+                    { week: 'Semana 9 (11-15 May)', class1: 'Ensayo de la exposición.', class2: 'Mejora del portafolio digital.' },
+                    { week: 'Semana 10 (18-22 May)', class1: 'Avances y revisión del proyecto final.', class2: '<b>Repaso con Kahoot</b>.' },
+                    { week: 'Semana 11 (25-29 May)', class1: 'Exposición final de proyectos.', class2: '<b>Examen Parcial 2 (T3)</b>.' },
+                    { week: 'Semana 12 (1-5 Jun)', class1: 'Repaso general del ciclo.', class2: 'Actividad de cierre.' },
+                ]
+            }
+        ]
+    },
+    '4': {
+        grade: '4º',
+        title: '4º de Primaria - El Diseñador de Soluciones',
+        description: 'En cuarto grado los estudiantes profundizan en el uso de herramientas de Office para resolver problemas reales. Se fortalece la alfabetización digital crítica, enseñando a verificar fuentes de información y a realizar análisis básicos de datos en Excel.',
+        trimesters: [
+            {
+                title: 'Trimestre 1: Ciberseguridad y Word Avanzado',
+                theme: 'Internet, Ciberseguridad y Microsoft Word',
+                concepts: 'Huella digital, ciberacoso, verificar información. Tipos de archivos, tablas, encabezados.',
+                project: '"Myth or Reality / Mito o Realidad" y "Hero Restaurant Menu / Menú de Restaurante de Héroes".',
+                evaluation: "Evaluación continua (50%): Proyecto 'Myth or Reality' (25%), Proyecto 'Menu' (15%), Prácticas (10%). Examen práctico (50%).",
+                weeks: [
+                    { week: 'Semana 1 (1-5 Sep)', class1: '<b>"Mi Huella Digital"</b> y "Fuentes Confiables".', class2: '<b>"El Arte de Buscar"</b> y análisis de noticias falsas.' },
+                    { week: 'Semana 2 (8-12 Sep)', class1: 'Inicio del Proyecto "Myth or Reality".', class2: 'Búsqueda y análisis de la segunda fuente.' },
+                    { week: 'Semana 3 (15-19 Sep)', class1: '<b>"El Veredicto"</b>: Comparar fuentes.', class2: 'Presentación de hallazgos del proyecto.' },
+                    { week: 'Semana 4 (22-26 Sep)', class1: '<b>"Word Avanzado: Tablas"</b>.', class2: '<b>Repaso con Kahoot</b>.' },
+                    { week: 'Semana 5 (29 Sep-3 Oct)', class1: '<b>"Encabezados y Pies de Página"</b>.', class2: 'Inicio del Proyecto "Hero Restaurant Menu".' },
+                    { week: 'Semana 6 (6-10 Oct)', class1: 'Diseño y formato del menú usando tablas.', class2: 'Cierre del proyecto.' },
+                    { week: 'Semana 7 (13-17 Oct)', class1: 'Repaso general para el examen parcial.', class2: 'Actividades prácticas en Word.' },
+                    { week: 'Semana 8 (20-24 Oct)', class1: 'Último repaso.', class2: '<b>Examen Parcial 1 (T1)</b>.' },
+                    { week: 'Semana 9 (27-31 Oct)', class1: 'Reforzamiento de Word.', class2: 'Práctica con tablas.' },
+                    { week: 'Semana 10 (3-7 Nov)', class1: 'Desafío de formato.', class2: 'Juegos de ciberseguridad.' },
+                    { week: 'Semana 11 (10-14 Nov)', class1: 'Repaso para segundo parcial.', class2: '<b>Repaso con Kahoot</b> de Word avanzado.' },
+                    { week: 'Semana 12 (17-21 Nov)', class1: 'Repaso final.', class2: 'Cierre de trimestre.' },
+                ]
+            },
+            {
+                title: 'Trimestre 2: PowerPoint y Excel Básico',
+                theme: 'Microsoft PowerPoint y Microsoft Excel',
+                concepts: 'Patrón de diapositivas, SmartArt. SUMA, PROMEDIO, formato de celdas.',
+                project: '"Survival Manual / Manual de Supervivencia" y "School Store / Tienda Escolar".',
+                evaluation: "Evaluación continua (50%): Proyecto 'Manual' (20%), Proyecto 'Store' (20%), Prácticas (10%). Examen práctico (50%).",
+                weeks: [
+                    { week: 'Semana 1 (24-28 Nov)', class1: '<b>Introducción a PowerPoint</b>: Patrón de diapositivas.', class2: '<b>"Organizando Ideas"</b>: Uso de SmartArt.' },
+                    { week: 'Semana 2 (1-5 Dic)', class1: 'Inicio del Proyecto "Survival Manual".', class2: 'Desarrollo del manual visual.' },
+                    { week: 'Semana 3 (8-12 Dic)', class1: 'Cierre del proyecto de PowerPoint.', class2: 'Introducción a Excel: Fórmulas (SUMA).' },
+                    { week: 'Semana 4 (15-19 Dic)', class1: 'Fórmulas básicas (PROMEDIO).', class2: '<b>Repaso con Kahoot</b>.' },
+                    { week: 'Semana 5 (5-9 Ene)', class1: 'Formato de celdas (moneda, porcentaje).', class2: 'Inicio del Proyecto "School Store".' },
+                    { week: 'Semana 6 (12-16 Ene)', class1: 'Desarrollo del inventario con totales.', class2: 'Desarrollo del inventario con promedios.' },
+                    { week: 'Semana 7 (19-23 Ene)', class1: 'Revisión del proyecto.', class2: '<b>Examen Parcial 1 (T2)</b>.' },
+                    { week: 'Semana 8 (26-30 Ene)', class1: 'Reforzamiento de Excel.', class2: 'Práctica con fórmulas.' },
+                    { week: 'Semana 9 (2-6 Feb)', class1: 'Desafío de formato de celdas.', class2: 'Práctica de integración.' },
+                    { week: 'Semana 10 (9-13 Feb)', class1: 'Cierre del proyecto de Excel.', class2: '<b>Repaso con Kahoot</b>.' },
+                    { week: 'Semana 11 (16-20 Feb)', class1: 'Repaso para segundo parcial.', class2: 'Juegos de repaso.' },
+                    { week: 'Semana 12 (23-27 Feb)', class1: 'Repaso final.', class2: 'Cierre de trimestre.' },
+                ]
+            },
+            {
+                title: 'Trimestre 3: Excel Avanzado e Integración',
+                theme: 'Microsoft Excel e Integración Final',
+                concepts: 'Gráficos de barras y circulares. Uso de Word, Excel, PowerPoint.',
+                project: '"Favorite Sport Survey / Encuesta de Deporte Favorito" y "Eco Challenge / Reto Ecológico".',
+                evaluation: "Evaluación continua (50%): Proyecto 'Survey' (20%), Avances 'Eco Challenge' (20%), Participación (10%). Proyecto final 'Eco Challenge' (50%).",
+                weeks: [
+                    { week: 'Semana 1 (2-6 Mar)', class1: '<b>Gráficos en Excel</b>: Crear gráficos de barras.', class2: 'Crear gráficos circulares.' },
+                    { week: 'Semana 2 (9-13 Mar)', class1: 'Inicio del Proyecto "Favorite Sport Survey".', class2: 'Creación de tabla y gráfico.' },
+                    { week: 'Semana 3 (16-20 Mar)', class1: 'Análisis y presentación del gráfico.', class2: 'Cierre del proyecto.' },
+                    { week: 'Semana 4 (23-27 Mar)', class1: 'Planificación del proyecto final "Eco Challenge".', class2: '<b>Repaso con Kahoot</b>.' },
+                    { week: 'Semana 5 (13-17 Abr)', class1: 'Inicio "Eco Challenge": Investigación.', class2: '<b>Examen Parcial 1 (T3)</b>.' },
+                    { week: 'Semana 6 (20-24 Abr)', class1: 'Desarrollo "Eco Challenge": Informe en Word.', class2: 'Desarrollo "Eco Challenge": Gráficos en Excel.' },
+                    { week: 'Semana 7 (27 Abr-1 May)', class1: 'Desarrollo "Eco Challenge": Presentación en PowerPoint.', class2: 'Integración de elementos.' },
+                    { week: 'Semana 8 (4-8 May)', class1: 'Revisión y práctica.', class2: 'Ensayo de la presentación.' },
+                    { week: 'Semana 9 (11-15 May)', class1: 'Mejora del proyecto.', class2: 'Reforzamiento de integración.' },
+                    { week: 'Semana 10 (18-22 May)', class1: 'Avances y revisión del proyecto final.', class2: '<b>Repaso integrador en Kahoot</b>.' },
+                    { week: 'Semana 11 (25-29 May)', class1: 'Presentación final "Eco Challenge".', class2: '<b>Examen Parcial 2 (T3)</b>.' },
+                    { week: 'Semana 12 (1-5 Jun)', class1: 'Repaso general del ciclo.', class2: 'Actividad de cierre.' },
+                ]
+            }
+        ]
+    },
+    '5': {
+        grade: '5º',
+        title: '5º de Primaria - El Líder de Proyectos Digitales',
+        description: 'En este nivel los alumnos consolidan sus competencias digitales mediante proyectos integradores que combinan Word, Excel y PowerPoint, además de reforzar la ciberseguridad y la ética digital. Se fomenta la investigación, el análisis de datos y la presentación interactiva de información.',
+        trimesters: [
+            {
+                title: 'Trimestre 1: Ciberseguridad Avanzada y Word Experto',
+                theme: 'Internet, Ciberseguridad y Microsoft Word',
+                concepts: 'Phishing, malware, privacidad. Archivos .zip, correspondencia, tabla de contenido.',
+                project: '"Digital Detective Agency / Agencia de Detectives Digitales" y "Event Organizer / Organizador de Eventos".',
+                evaluation: "Evaluación continua (50%): Proyecto 'Detective' (25%), Proyecto 'Organizer' (15%), Prácticas (10%). Examen práctico (50%).",
+                weeks: [
+                    { week: 'Semana 1 (1-5 Sep)', class1: '<b>"El Lado Oscuro de la Red"</b>: Phishing, Malware, Ransomware.', class2: '<b>"Anatomía de un Correo Falso"</b> y "Protegiendo mi Identidad".' },
+                    { week: 'Semana 2 (8-12 Sep)', class1: '<b>"Derechos de Autor vs. Creative Commons"</b>.', class2: 'Inicio del Proyecto "Digital Detective Agency".' },
+                    { week: 'Semana 3 (15-19 Sep)', class1: 'Diseño del cartel de advertencia.', class2: 'Cierre del proyecto.' },
+                    { week: 'Semana 4 (22-26 Sep)', class1: '<b>"Word Experto: Combinar Correspondencia"</b>.', class2: '<b>Repaso con Kahoot</b>.' },
+                    { week: 'Semana 5 (29 Sep-3 Oct)', class1: '<b>"Tabla de Contenido Automática"</b>.', class2: 'Inicio del Proyecto "Event Organizer".' },
+                    { week: 'Semana 6 (6-10 Oct)', class1: '<b>"Personalización Masiva"</b> y "Comprimiendo Archivos" (.zip).', class2: 'Cierre del proyecto.' },
+                    { week: 'Semana 7 (13-17 Oct)', class1: 'Campaña de Concientización: Presentar carteles.', class2: 'Repaso general para el examen parcial.' },
+                    { week: 'Semana 8 (20-24 Oct)', class1: 'Último repaso.', class2: '<b>Examen Parcial 1 (T1)</b>.' },
+                    { week: 'Semana 9 (27-31 Oct)', class1: 'Reforzamiento de Word Experto.', class2: 'Práctica de combinar correspondencia.' },
+                    { week: 'Semana 10 (3-7 Nov)', class1: 'Desafío de tabla de contenido.', class2: 'Juegos de ciberseguridad avanzada.' },
+                    { week: 'Semana 11 (10-14 Nov)', class1: 'Repaso para segundo parcial.', class2: '<b>Repaso con Kahoot</b> de Word avanzado.' },
+                    { week: 'Semana 12 (17-21 Nov)', class1: 'Repaso final.', class2: 'Cierre de trimestre.' },
+                ]
+            },
+            {
+                title: 'Trimestre 2: PowerPoint Interactivo y Excel Avanzado',
+                theme: 'Microsoft PowerPoint y Microsoft Excel',
+                concepts: 'Hipervínculos y botones de acción. Ordenar y filtrar, función SI.',
+                project: '"Historical Escape Room / Escape Room Histórico" y "Sports Analyst / Analista Deportivo".',
+                evaluation: "Evaluación continua (50%): Proyecto 'Escape Room' (25%), Proyecto 'Analyst' (15%), Prácticas (10%). Presentación (50%).",
+                weeks: [
+                    { week: 'Semana 1 (24-28 Nov)', class1: '<b>PowerPoint interactivo</b>: Hipervínculos y botones de acción.', class2: 'Inicio del Proyecto "Historical Escape Room".' },
+                    { week: 'Semana 2 (1-5 Dic)', class1: 'Desarrollo del juego interactivo.', class2: 'Pruebas y ajustes del proyecto.' },
+                    { week: 'Semana 3 (8-12 Dic)', class1: 'Cierre del proyecto de PowerPoint.', class2: 'Introducción a Excel avanzado: Ordenar y filtrar.' },
+                    { week: 'Semana 4 (15-19 Dic)', class1: 'Práctica con filtros avanzados.', class2: '<b>Repaso con Kahoot</b>.' },
+                    { week: 'Semana 5 (5-9 Ene)', class1: 'Lógica en Excel: Uso de la función condicional SI.', class2: 'Inicio del Proyecto "Sports Analyst".' },
+                    { week: 'Semana 6 (12-16 Ene)', class1: 'Desarrollo del proyecto de análisis.', class2: 'Aplicación de la función SI.' },
+                    { week: 'Semana 7 (19-23 Ene)', class1: 'Revisión del proyecto.', class2: '<b>Examen Parcial 1 (T2)</b>.' },
+                    { week: 'Semana 8 (26-30 Ene)', class1: 'Reforzamiento de Excel avanzado.', class2: 'Práctica con función SI.' },
+                    { week: 'Semana 9 (2-6 Feb)', class1: 'Desafío de ordenar y filtrar.', class2: 'Práctica de integración.' },
+                    { week: 'Semana 10 (9-13 Feb)', class1: 'Cierre del proyecto de Excel.', class2: '<b>Repaso con Kahoot</b>.' },
+                    { week: 'Semana 11 (16-20 Feb)', class1: 'Repaso para segundo parcial.', class2: 'Presentación de proyectos.' },
+                    { week: 'Semana 12 (23-27 Feb)', class1: 'Repaso final.', class2: 'Cierre de trimestre.' },
+                ]
+            },
+            {
+                title: 'Trimestre 3: Proyectos Integradores',
+                theme: 'Proyecto Integrador e Integración Final',
+                concepts: 'Portafolio digital. Word + Excel + PowerPoint.',
+                project: '"Mission: Save the Planet / Misión: Salvar el Planeta" y "Digital Science Fair / Feria de Ciencias Digital".',
+                evaluation: "Evaluación continua (50%): Avances 'Mission' (20%), Proyecto 'Science Fair' (20%), Colaboración (10%). Proyecto final (50%).",
+                weeks: [
+                    { week: 'Semana 1 (2-6 Mar)', class1: 'Inicio "Mission: Save the Planet": Investigación.', class2: 'Análisis de datos en Excel.' },
+                    { week: 'Semana 2 (9-13 Mar)', class1: 'Redacción del informe en Word.', class2: 'Diseño de la presentación en PowerPoint.' },
+                    { week: 'Semana 3 (16-20 Mar)', class1: 'Integración del proyecto.', class2: 'Revisión y práctica.' },
+                    { week: 'Semana 4 (23-27 Mar)', class1: 'Presentación "Mission: Save the Planet".', class2: 'Inicio "Digital Science Fair": Formación de equipos.' },
+                    { week: 'Semana 5 (13-17 Abr)', class1: 'Planificación "Science Fair".', class2: '<b>Examen Parcial 1 (T3)</b>.' },
+                    { week: 'Semana 6 (20-24 Abr)', class1: 'Avances del proyecto.', class2: '<b>Repaso con Kahoot</b>.' },
+                    { week: 'Semana 7 (27 Abr-1 May)', class1: 'Desarrollo del proyecto en equipos.', class2: 'Revisión de avances.' },
+                    { week: 'Semana 8 (4-8 May)', class1: 'Desarrollo del proyecto en equipos.', class2: 'Práctica de integración.' },
+                    { week: 'Semana 9 (11-15 May)', class1: 'Preparación de la exposición.', class2: 'Ensayo de la presentación.' },
+                    { week: 'Semana 10 (18-22 May)', class1: 'Mejora final de proyectos.', class2: 'Ensayo general.' },
+                    { week: 'Semana 11 (25-29 May)', class1: 'Preparación final de exposiciones.', class2: '<b>Repaso final con Kahoot</b>.' },
+                    { week: 'Semana 12 (1-5 Jun)', class1: 'Presentación de proyectos en la "Digital Science Fair".', class2: '<b>Examen Parcial 2 (T3)</b>.' },
+                ]
+            }
+        ]
+    }
+};
