@@ -7,40 +7,45 @@ export const processCurriculumWithAI = async (text, apiKey) => {
   const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
   const prompt = `
-    Actúa como un experto en educación y estructuración de datos. Analiza el siguiente texto extraído de un plan de estudios (PDF) y extrae la información para estructurarla en un formato JSON específico.
+    Actúa como un experto en educación y planificación curricular. Analiza el siguiente texto extraído de un PDF de planificación escolar (que puede ser un calendario, una tabla o una lista) y extrae la información estructurada.
 
-    El texto es:
-    ${text.substring(0, 30000)} // Limit length to avoid token limits if PDF is huge
+    TEXTO DEL PDF:
+    "${text}"
 
-    Necesito que generes un JSON con la siguiente estructura EXACTA para un grado escolar (si hay varios, elige el principal o el primero que encuentres, o trata de inferir si es para 2, 3, 4 o 5 grado). Si no encuentras información específica, usa "Pendiente" o textos genéricos.
+    OBJETIVO:
+    Generar un JSON válido con la estructura exacta que se describe a continuación. Debes inferir el grado escolar si es posible, si no, usa "General".
+    Es CRÍTICO que extraigas el rango de fechas exacto para cada semana y el horario de clases específico para cada día si está disponible.
 
-    Estructura JSON requerida:
+    ESTRUCTURA JSON REQUERIDA:
     {
-      "grade": "Xº", // Ejemplo: 2º, 3º
-      "title": "Título del Grado",
-      "description": "Descripción general del curso",
-      "trimesters": [
-        {
-          "title": "Nombre del Trimestre 1",
-          "theme": "Tema principal",
-          "concepts": "Conceptos clave",
-          "project": "Nombre del proyecto",
-          "evaluation": "Criterios de evaluación",
-          "weeks": [
-            { 
-              "week": "Semana 1", 
-              "dateRange": "YYYY-MM-DD to YYYY-MM-DD", // INTENTA EXTRAER EL RANGO DE FECHAS SI EXISTE. Si no, usa null.
-              "class1": "Tema clase 1", 
-              "class2": "Tema clase 2" 
-            },
-            // ... resto de semanas
-          ]
-        }
-        // ... resto de trimestres
-      ]
+        "grade": "2º", // O el grado que detectes
+        "trimesters": [
+            {
+                "title": "Trimestre 1",
+                "weeks": [
+                    {
+                        "week": 1,
+                        "title": "Nombre del tema o proyecto de la semana",
+                        "dateRange": "YYYY-MM-DD to YYYY-MM-DD", // EJEMPLO: "2025-08-25 to 2025-08-29". INFIERE EL AÑO 2024-2025.
+                        "schedule": { // Horario específico detectado o inferido
+                            "Monday": ["Matemáticas", "Español"],
+                            "Tuesday": ["Ciencias", "Historia"],
+                            "Wednesday": ["Matemáticas", "Arte"],
+                            "Thursday": ["Español", "Ed. Física"],
+                            "Friday": ["Repaso", "Club"]
+                        },
+                        "class1": "Descripción detallada de la actividad principal o Clase 1",
+                        "class2": "Descripción detallada de la actividad secundaria o Clase 2"
+                    }
+                ]
+            }
+        ]
     }
 
-    Solo devuelve el JSON válido, sin bloques de código markdown ni texto adicional. Trata de inferir el año actual (2024-2025) para las fechas.
+    REGLAS:
+    1. Si el texto menciona fechas (ej. "Semana del 26 al 30 de Agosto"), conviértelas a formato "YYYY-MM-DD to YYYY-MM-DD" asumiendo el ciclo escolar actual (2024-2025 o 2025-2026 según corresponda).
+    2. Si no hay horario explícito, genera uno genérico basado en las materias mencionadas en el texto.
+    3. Devuelve SOLO el JSON, sin markdown, sin bloques de código, sin texto adicional.
   `;
 
   try {

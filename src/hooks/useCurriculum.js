@@ -21,9 +21,10 @@ export const useCurriculum = () => {
     };
 
     const getCurrentPlanTopic = useCallback(() => {
-        const { week, trimester } = getSchoolWeek(schoolSettings.startDate);
         const now = new Date();
         const dayOfWeek = now.getDay(); // 0 = Sun, 1 = Mon...
+        const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+        const currentDayName = days[dayOfWeek];
 
         // If weekend, return no class
         if (dayOfWeek === 0 || dayOfWeek === 6) {
@@ -41,49 +42,76 @@ export const useCurriculum = () => {
             return { status: 'error', message: `Datos del plan de estudios (${grade}º) no encontrados.` };
         }
 
-        // Trimester is 1-based, array is 0-based
-        const trimesterData = gradeData.trimesters[trimester - 1];
+        // Find the current week and trimester based on DATE MATCHING first
+        let foundWeek = null;
+        let foundTrimester = null;
+        let foundTrimesterIndex = 0;
 
-        if (!trimesterData || !trimesterData.weeks) {
-            return { status: 'error', message: 'Datos del trimestre no encontrados.' };
+        // Iterate through all trimesters and weeks to find the date match
+        for (let tIndex = 0; tIndex < gradeData.trimesters.length; tIndex++) {
+            const trimester = gradeData.trimesters[tIndex];
+            if (!trimester.weeks) continue;
+
+            const weekMatch = trimester.weeks.find(w => {
+                if (!w.dateRange) return false;
+                const [startStr, endStr] = w.dateRange.split(' to ');
+                if (!startStr || !endStr) return false;
+
+                const start = new Date(startStr);
+                const end = new Date(endStr);
+                start.setHours(0, 0, 0, 0);
+                end.setHours(23, 59, 59, 999);
+
+                return now >= start && now <= end;
+            });
+
+            if (weekMatch) {
+                foundWeek = weekMatch;
+                foundTrimester = trimester;
+                foundTrimesterIndex = tIndex + 1;
+                break;
+            }
         }
 
-        // Try to find week by explicit date range first
-        let weekData = trimesterData.weeks.find(w => {
-            if (!w.dateRange) return false;
-            const [startStr, endStr] = w.dateRange.split(' to ');
-            if (!startStr || !endStr) return false;
-            const start = new Date(startStr);
-            const end = new Date(endStr);
-            // Set end date to end of day
-            end.setHours(23, 59, 59, 999);
-            return now >= start && now <= end;
-        });
-
-        // Fallback to calculated week if no date match
-        if (!weekData) {
-            // Week is 1-based, array is 0-based
-            weekData = trimesterData.weeks[week - 1];
+        // Fallback to calculated week if no date match found
+        if (!foundWeek) {
+            const { week, trimester } = getSchoolWeek(schoolSettings.startDate);
+            // Trimester is 1-based, array is 0-based
+            foundTrimester = gradeData.trimesters[trimester - 1];
+            if (foundTrimester && foundTrimester.weeks) {
+                foundWeek = foundTrimester.weeks[week - 1];
+            }
+            foundTrimesterIndex = trimester;
         }
 
-        if (!weekData) {
-            return { status: 'error', message: 'Datos de la semana no encontrados.' };
+        if (!foundWeek) {
+            return { status: 'error', message: 'No se encontró planificación para la fecha actual.' };
         }
 
-        // Determine class based on day
-        // Mon-Wed = Class 1, Thu-Fri = Class 2
-        const isFirstHalfOfWeek = dayOfWeek <= 3;
-        const topic = isFirstHalfOfWeek ? 'Clase 1' : 'Clase 2';
-        const activity = isFirstHalfOfWeek ? weekData.class1 : weekData.class2;
+        // Determine class/activity for the day
+        let dailyActivity = "Actividad general";
+        let dailySubjects = [];
+
+        // If we have a specific schedule from AI
+        if (foundWeek.schedule && foundWeek.schedule[currentDayName]) {
+            dailySubjects = foundWeek.schedule[currentDayName];
+            dailyActivity = `Clases de hoy: ${dailySubjects.join(', ')}`;
+        } else {
+            // Fallback to class1/class2 logic
+            const isFirstHalfOfWeek = dayOfWeek <= 3;
+            dailyActivity = isFirstHalfOfWeek ? foundWeek.class1 : foundWeek.class2;
+            dailySubjects = [isFirstHalfOfWeek ? "Bloque 1" : "Bloque 2"];
+        }
 
         return {
             status: 'active',
             grade: `${grade}º`,
-            week: weekData.week,
-            topic,
-            activity,
-            trimesterTitle: trimesterData.title,
-            trimesterNumber: trimester
+            week: foundWeek.week,
+            topic: foundWeek.title || `Semana ${foundWeek.week}`,
+            activity: dailyActivity,
+            subjects: dailySubjects, // New field for the list of subjects
+            trimesterTitle: foundTrimester ? foundTrimester.title : `Trimestre ${foundTrimesterIndex}`,
+            trimesterNumber: foundTrimesterIndex
         };
     }, [curriculum, schoolSettings.startDate, schoolSettings.selectedGrade]);
 

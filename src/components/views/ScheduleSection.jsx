@@ -1,76 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import { ChevronDownIcon, PencilIcon, CheckIcon } from '@heroicons/react/24/outline';
+import React from 'react';
+import { useCurriculum } from '../../hooks/useCurriculum';
+import { ChevronDownIcon, ClockIcon, BookOpenIcon } from '@heroicons/react/24/outline';
 
 export default function ScheduleSection() {
-    const [isOpen, setIsOpen] = useState(false);
-    const [isEditMode, setIsEditMode] = useState(false);
-
-    // Default schedule data
-    const defaultSchedule = [
-        { time: '7:40 - 8:00', mon: '', tue: '', wed: '', thu: '', fri: '' },
-        { time: '8:00 - 8:55', mon: '', tue: '', wed: '', thu: '', fri: '' },
-        { time: '8:55 - 9:50', mon: '4º B', tue: '2º A', wed: '5º B', thu: '', fri: '4º A' },
-        { time: '9:50 - 10:20', mon: 'RECESO', tue: 'RECESO', wed: 'RECESO', thu: 'RECESO', fri: 'RECESO', isBreak: true },
-        { time: '10:20 - 11:20', mon: '4º A', tue: '3º B', wed: '', thu: '', fri: '3º A' },
-        { time: '11:20 - 12:15', mon: '2º B', tue: '5º A', wed: '5º A', thu: '3º B', fri: '2º B' },
-        { time: '12:15 - 12:30', mon: 'RECREO', tue: 'RECREO', wed: 'RECREO', thu: 'RECREO', fri: 'RECREO', isBreak: true },
-        { time: '12:30 - 1:30', mon: '2º A', tue: '3º A', wed: '4º B', thu: '5º B', fri: '' },
-        { time: '1:30 - 2:25', mon: '', tue: '', wed: '', thu: '', fri: '' },
-    ];
-
-    // Load from localStorage or use default
-    const [schedule, setSchedule] = useState(() => {
-        const saved = localStorage.getItem('class_schedule');
-        return saved ? JSON.parse(saved) : defaultSchedule;
-    });
-
-    // Save to localStorage whenever schedule changes
-    useEffect(() => {
-        localStorage.setItem('class_schedule', JSON.stringify(schedule));
-    }, [schedule]);
+    const { getCurrentPlanTopic } = useCurriculum();
+    const planData = getCurrentPlanTopic();
+    const [isOpen, setIsOpen] = React.useState(true);
 
     const toggleAccordion = () => setIsOpen(!isOpen);
-    const toggleEditMode = (e) => {
-        e.stopPropagation();
-        setIsEditMode(!isEditMode);
-    };
 
-    const handleCellChange = (rowIndex, day, value) => {
-        const newSchedule = [...schedule];
-        newSchedule[rowIndex][day] = value;
-        setSchedule(newSchedule);
-    };
+    if (planData.status === 'weekend' || planData.status === 'error') {
+        return null; // Don't show schedule on weekends or errors
+    }
 
-    // Highlight current time slot
-    const [activeSlotIndex, setActiveSlotIndex] = useState(-1);
-    const [currentDay, setCurrentDay] = useState('');
-
-    useEffect(() => {
-        const updateActiveSlot = () => {
-            const now = new Date();
-            const days = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
-            const today = days[now.getDay()];
-            setCurrentDay(today);
-
-            const currentMinutes = now.getHours() * 60 + now.getMinutes();
-
-            const index = schedule.findIndex(slot => {
-                const [start, end] = slot.time.split(' - ');
-                const [startHour, startMin] = start.split(':').map(Number);
-                const [endHour, endMin] = end.split(':').map(Number);
-
-                const startTotal = startHour * 60 + startMin;
-                const endTotal = endHour * 60 + endMin;
-
-                return currentMinutes >= startTotal && currentMinutes < endTotal;
-            });
-            setActiveSlotIndex(index);
-        };
-
-        updateActiveSlot();
-        const interval = setInterval(updateActiveSlot, 60000); // Update every minute
-        return () => clearInterval(interval);
-    }, [schedule]);
+    const subjects = planData.subjects || [];
 
     return (
         <div className="mb-8 bg-white dark:bg-gray-800 rounded-2xl shadow-md border border-gray-200 dark:border-gray-700 overflow-hidden transition-colors">
@@ -78,62 +21,43 @@ export default function ScheduleSection() {
                 onClick={toggleAccordion}
                 className="w-full text-left p-6 focus:outline-none flex justify-between items-center"
             >
-                <h2 className="text-2xl font-bold text-gray-800 dark:text-white">Mi Horario de Clases</h2>
+                <div className="flex items-center gap-3">
+                    <div className="bg-amber-100 dark:bg-amber-900/30 p-2 rounded-lg">
+                        <ClockIcon className="w-6 h-6 text-amber-600 dark:text-amber-500" />
+                    </div>
+                    <h2 className="text-2xl font-bold text-gray-800 dark:text-white">Horario de Hoy</h2>
+                </div>
                 <ChevronDownIcon className={`w-6 h-6 text-gray-500 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
             </button>
 
             <div className={`transition-all duration-500 ease-in-out overflow-hidden ${isOpen ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'}`}>
-                <div className="p-6 pt-0 overflow-x-auto">
-                    <div className="flex justify-end mb-2">
-                        <button
-                            onClick={toggleEditMode}
-                            className={`p-2 rounded-full transition-colors ${isEditMode ? 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300' : 'text-gray-500 hover:text-amber-600'}`}
-                            title={isEditMode ? "Guardar cambios" : "Editar horario"}
-                        >
-                            {isEditMode ? <CheckIcon className="w-5 h-5" /> : <PencilIcon className="w-5 h-5" />}
-                        </button>
-                    </div>
+                <div className="p-6 pt-0">
+                    {subjects.length > 0 ? (
+                        <div className="space-y-3">
+                            {subjects.map((subject, index) => (
+                                <div key={index} className="flex items-center p-4 bg-stone-50 dark:bg-gray-700/50 rounded-xl border border-gray-100 dark:border-gray-600 hover:border-amber-200 dark:hover:border-amber-500/50 transition-colors">
+                                    <div className="h-10 w-10 rounded-full bg-white dark:bg-gray-600 flex items-center justify-center shadow-sm mr-4 border border-gray-100 dark:border-gray-500">
+                                        <span className="font-bold text-amber-600 dark:text-amber-400">{index + 1}</span>
+                                    </div>
+                                    <div className="flex-1">
+                                        <h3 className="font-semibold text-gray-800 dark:text-white text-lg">{subject}</h3>
+                                        <p className="text-sm text-gray-500 dark:text-gray-400">Sesión {index + 1}</p>
+                                    </div>
+                                    <BookOpenIcon className="w-5 h-5 text-gray-400" />
+                                </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <p className="text-gray-500 dark:text-gray-400 text-center py-4">
+                            No hay materias específicas detectadas para hoy.
+                        </p>
+                    )}
 
-                    <table className="w-full border-collapse text-center min-w-[600px]">
-                        <thead>
-                            <tr className="bg-stone-50 dark:bg-gray-700">
-                                <th className="p-2 text-xs font-semibold text-gray-600 dark:text-gray-300 border dark:border-gray-600">Hora</th>
-                                <th className="p-2 text-xs font-semibold text-gray-600 dark:text-gray-300 border dark:border-gray-600">Lunes</th>
-                                <th className="p-2 text-xs font-semibold text-gray-600 dark:text-gray-300 border dark:border-gray-600">Martes</th>
-                                <th className="p-2 text-xs font-semibold text-gray-600 dark:text-gray-300 border dark:border-gray-600">Miércoles</th>
-                                <th className="p-2 text-xs font-semibold text-gray-600 dark:text-gray-300 border dark:border-gray-600">Jueves</th>
-                                <th className="p-2 text-xs font-semibold text-gray-600 dark:text-gray-300 border dark:border-gray-600">Viernes</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {schedule.map((row, rowIndex) => {
-                                const isActive = rowIndex === activeSlotIndex;
-                                return (
-                                    <tr key={rowIndex} className={`transition-colors ${isActive ? 'bg-amber-50 dark:bg-amber-900/30 border-l-4 border-l-amber-500' : ''}`}>
-                                        <td className="p-2 text-xs border dark:border-gray-600 font-medium text-gray-700 dark:text-gray-300">
-                                            {row.time}
-                                            {isActive && <span className="ml-1 text-amber-600 font-bold animate-pulse">●</span>}
-                                        </td>
-                                        {['mon', 'tue', 'wed', 'thu', 'fri'].map(day => (
-                                            <td
-                                                key={day}
-                                                className={`p-2 text-xs border dark:border-gray-600 
-                                                    ${row.isBreak ? 'bg-gray-100 dark:bg-gray-600 font-bold' : ''} 
-                                                    ${isEditMode && !row.isBreak ? 'border-2 border-amber-400 bg-amber-50 dark:bg-amber-900/20 cursor-text' : ''}
-                                                    ${day === currentDay && isActive ? 'bg-amber-100 dark:bg-amber-800/50 font-bold text-amber-900 dark:text-amber-100' : ''}
-                                                `}
-                                                contentEditable={isEditMode && !row.isBreak}
-                                                suppressContentEditableWarning={true}
-                                                onBlur={(e) => handleCellChange(rowIndex, day, e.target.innerText)}
-                                            >
-                                                {row[day]}
-                                            </td>
-                                        ))}
-                                    </tr>
-                                );
-                            })}
-                        </tbody>
-                    </table>
+                    <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-100 dark:border-blue-800">
+                        <p className="text-sm text-blue-800 dark:text-blue-200 text-center">
+                            Este horario se genera automáticamente basado en tu Plan de Estudios (PDF).
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>

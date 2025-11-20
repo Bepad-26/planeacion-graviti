@@ -20,19 +20,31 @@ export default function EvaluationView() {
         }
     }, [studentLists, selectedClass, getAllClasses]);
 
-    // Mock data for evaluation - in a real app this would be more complex and persistent
-    const getStudentData = (student) => ({
-        name: student,
-        attendance: 95,
-        activities: 85,
-        exam: 9.0,
-        final: 9.2,
-        trimesters: [
-            { id: 1, attendance: 98, activities: 90, exam: 9.5, final: 9.4 },
-            { id: 2, attendance: 92, activities: 80, exam: 8.5, final: 8.8 },
-            { id: 3, attendance: 95, activities: 85, exam: 9.0, final: 9.2 },
-        ]
+    // Load student data from localStorage or initialize
+    const [studentData, setStudentData] = useState(() => {
+        const saved = localStorage.getItem('student_evaluations');
+        return saved ? JSON.parse(saved) : {};
     });
+
+    // Save to localStorage
+    useEffect(() => {
+        localStorage.setItem('student_evaluations', JSON.stringify(studentData));
+    }, [studentData]);
+
+    const getStudentEvaluation = (studentName) => {
+        if (!studentData[studentName]) {
+            // Initialize default structure if not exists
+            return {
+                trimesters: [
+                    { id: 1, attendance: 0, activities: 0, exam: 0, final: 0 },
+                    { id: 2, attendance: 0, activities: 0, exam: 0, final: 0 },
+                    { id: 3, attendance: 0, activities: 0, exam: 0, final: 0 },
+                ],
+                final: 0
+            };
+        }
+        return studentData[studentName];
+    };
 
     const handleExcelUpload = async (e) => {
         const file = e.target.files[0];
@@ -105,8 +117,8 @@ export default function EvaluationView() {
                             key={cls}
                             onClick={() => setSelectedClass(cls)}
                             className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${selectedClass === cls
-                                    ? 'bg-amber-600 text-white'
-                                    : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
+                                ? 'bg-amber-600 text-white'
+                                : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
                                 } `}
                         >
                             {cls}
@@ -158,9 +170,39 @@ export default function EvaluationView() {
             </div>
         </div>
     );
+    const handleGradeChange = (studentName, trimesterId, field, value) => {
+        const currentData = getStudentEvaluation(studentName);
+        const newTrimesters = currentData.trimesters.map(t => {
+            if (t.id === trimesterId) {
+                const updatedTrimester = { ...t, [field]: parseFloat(value) || 0 };
+                // Recalculate final for trimester: 50% activities + 50% exam (simplified logic)
+
+                const activitiesScore = updatedTrimester.activities > 10 ? updatedTrimester.activities / 10 : updatedTrimester.activities;
+                const examScore = updatedTrimester.exam > 10 ? updatedTrimester.exam / 10 : updatedTrimester.exam;
+
+                updatedTrimester.final = ((activitiesScore * 0.5) + (examScore * 0.5)) * 10; // Scale to 10
+                updatedTrimester.final = Math.round(updatedTrimester.final * 10) / 10; // Round to 1 decimal
+
+                return updatedTrimester;
+            }
+            return t;
+        });
+
+        // Recalculate global final
+        const totalFinal = newTrimesters.reduce((acc, curr) => acc + curr.final, 0) / 3;
+
+        setStudentData(prev => ({
+            ...prev,
+            [studentName]: {
+                ...currentData,
+                trimesters: newTrimesters,
+                final: Math.round(totalFinal * 10) / 10
+            }
+        }));
+    };
 
     const renderStudentDetail = () => {
-        const data = getStudentData(selectedStudent);
+        const data = getStudentEvaluation(selectedStudent);
         return (
             <div className="animate-fade-in">
                 <button
@@ -189,7 +231,7 @@ export default function EvaluationView() {
                                 <tr>
                                     <th className="py-3 px-6">Trimestre</th>
                                     <th className="py-3 px-6">Asistencia (%)</th>
-                                    <th className="py-3 px-6">Actividades (Pts)</th>
+                                    <th className="py-3 px-6">Actividades (0-100)</th>
                                     <th className="py-3 px-6">Examen (0-10)</th>
                                     <th className="py-3 px-6">Calificación</th>
                                 </tr>
@@ -200,9 +242,30 @@ export default function EvaluationView() {
                                         <td className="py-4 px-6 font-medium text-gray-900 dark:text-white whitespace-nowrap">
                                             Trimestre {trim.id}
                                         </td>
-                                        <td className="py-4 px-6">{trim.attendance}%</td>
-                                        <td className="py-4 px-6">{trim.activities}</td>
-                                        <td className="py-4 px-6">{trim.exam}</td>
+                                        <td className="py-4 px-6">
+                                            <input
+                                                type="number"
+                                                className="w-20 p-1 border rounded dark:bg-gray-700 dark:border-gray-600"
+                                                value={trim.attendance}
+                                                onChange={(e) => handleGradeChange(selectedStudent, trim.id, 'attendance', e.target.value)}
+                                            />
+                                        </td>
+                                        <td className="py-4 px-6">
+                                            <input
+                                                type="number"
+                                                className="w-20 p-1 border rounded dark:bg-gray-700 dark:border-gray-600"
+                                                value={trim.activities}
+                                                onChange={(e) => handleGradeChange(selectedStudent, trim.id, 'activities', e.target.value)}
+                                            />
+                                        </td>
+                                        <td className="py-4 px-6">
+                                            <input
+                                                type="number"
+                                                className="w-20 p-1 border rounded dark:bg-gray-700 dark:border-gray-600"
+                                                value={trim.exam}
+                                                onChange={(e) => handleGradeChange(selectedStudent, trim.id, 'exam', e.target.value)}
+                                            />
+                                        </td>
                                         <td className="py-4 px-6 font-bold text-gray-900 dark:text-white">{trim.final}</td>
                                     </tr>
                                 ))}
