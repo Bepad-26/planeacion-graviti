@@ -49,71 +49,28 @@ export const useCurriculum = () => {
 
         // Iterate through all trimesters and weeks to find the date match
         for (let tIndex = 0; tIndex < gradeData.trimesters.length; tIndex++) {
-            const trimester = gradeData.trimesters[tIndex];
-            if (!trimester.weeks) continue;
-
-            const weekMatch = trimester.weeks.find(w => {
-                if (!w.dateRange) return false;
-                const [startStr, endStr] = w.dateRange.split(' to ');
-                if (!startStr || !endStr) return false;
-
-                const start = new Date(startStr);
-                const end = new Date(endStr);
-                start.setHours(0, 0, 0, 0);
-                end.setHours(23, 59, 59, 999);
-
-                return now >= start && now <= end;
-            });
-
-            if (weekMatch) {
-                foundWeek = weekMatch;
-                foundTrimester = trimester;
-                foundTrimesterIndex = tIndex + 1;
-                break;
+            // If we have a specific schedule from AI
+            if (foundWeek.schedule && foundWeek.schedule[currentDayName]) {
+                dailySubjects = foundWeek.schedule[currentDayName];
+                dailyActivity = `Clases de hoy: ${dailySubjects.join(', ')}`;
+            } else {
+                // Fallback to class1/class2 logic
+                const isFirstHalfOfWeek = dayOfWeek <= 3;
+                dailyActivity = isFirstHalfOfWeek ? foundWeek.class1 : foundWeek.class2;
+                dailySubjects = [isFirstHalfOfWeek ? "Bloque 1" : "Bloque 2"];
             }
-        }
 
-        // Fallback to calculated week if no date match found
-        if (!foundWeek) {
-            const { week, trimester } = getSchoolWeek(schoolSettings.startDate);
-            // Trimester is 1-based, array is 0-based
-            foundTrimester = gradeData.trimesters[trimester - 1];
-            if (foundTrimester && foundTrimester.weeks) {
-                foundWeek = foundTrimester.weeks[week - 1];
-            }
-            foundTrimesterIndex = trimester;
-        }
-
-        if (!foundWeek) {
-            return { status: 'error', message: 'No se encontró planificación para la fecha actual.' };
-        }
-
-        // Determine class/activity for the day
-        let dailyActivity = "Actividad general";
-        let dailySubjects = [];
-
-        // If we have a specific schedule from AI
-        if (foundWeek.schedule && foundWeek.schedule[currentDayName]) {
-            dailySubjects = foundWeek.schedule[currentDayName];
-            dailyActivity = `Clases de hoy: ${dailySubjects.join(', ')}`;
-        } else {
-            // Fallback to class1/class2 logic
-            const isFirstHalfOfWeek = dayOfWeek <= 3;
-            dailyActivity = isFirstHalfOfWeek ? foundWeek.class1 : foundWeek.class2;
-            dailySubjects = [isFirstHalfOfWeek ? "Bloque 1" : "Bloque 2"];
-        }
-
-        return {
-            status: 'active',
-            grade: `${grade}º`,
-            week: foundWeek.week,
-            topic: foundWeek.title || `Semana ${foundWeek.week}`,
-            activity: dailyActivity,
-            subjects: dailySubjects, // New field for the list of subjects
-            trimesterTitle: foundTrimester ? foundTrimester.title : `Trimestre ${foundTrimesterIndex}`,
-            trimesterNumber: foundTrimesterIndex
-        };
-    }, [curriculum, schoolSettings.startDate, schoolSettings.selectedGrade]);
+            return {
+                status: 'active',
+                grade: `${grade}º`,
+                week: foundWeek.week,
+                topic: foundWeek.title || `Semana ${foundWeek.week}`,
+                activity: dailyActivity,
+                subjects: dailySubjects, // New field for the list of subjects
+                trimesterTitle: foundTrimester ? foundTrimester.title : `Trimestre ${foundTrimesterIndex}`,
+                trimesterNumber: foundTrimesterIndex
+            };
+        }, [curriculum, schoolSettings.startDate, schoolSettings.selectedGrade]);
 
     return {
         curriculum,

@@ -52,6 +52,7 @@ export const processCurriculumWithAI = async (text, apiKey) => {
     const result = await model.generateContent(prompt);
     const response = await result.response;
     const text = response.text();
+    console.log('AI Raw Response:', text);
 
     // Improved JSON extraction: find the first '{' and the last '}'
     const jsonMatch = text.match(/\{[\s\S]*\}/);

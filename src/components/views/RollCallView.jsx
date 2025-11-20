@@ -8,7 +8,11 @@ export default function RollCallView() {
     const { getStudentsByClass, getAllClasses } = useStudents();
     const [selectedClass, setSelectedClass] = useState('2A');
     const [selectedTrimester, setSelectedTrimester] = useState('1');
-    const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
+    const [selectedDate, setSelectedDate] = useState(() => {
+        const now = new Date();
+        const offset = now.getTimezoneOffset() * 60000;
+        return new Date(now.getTime() - offset).toISOString().split('T')[0];
+    });
     const [attendance, setAttendance] = useState(() => {
         return JSON.parse(localStorage.getItem('attendance') || '{}');
     });
