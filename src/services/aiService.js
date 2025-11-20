@@ -27,7 +27,12 @@ export const processCurriculumWithAI = async (text, apiKey) => {
           "project": "Nombre del proyecto",
           "evaluation": "Criterios de evaluación",
           "weeks": [
-            { "week": "Semana 1", "class1": "Tema clase 1", "class2": "Tema clase 2" },
+            { 
+              "week": "Semana 1", 
+              "dateRange": "YYYY-MM-DD to YYYY-MM-DD", // INTENTA EXTRAER EL RANGO DE FECHAS SI EXISTE. Si no, usa null.
+              "class1": "Tema clase 1", 
+              "class2": "Tema clase 2" 
+            },
             // ... resto de semanas
           ]
         }
@@ -35,7 +40,7 @@ export const processCurriculumWithAI = async (text, apiKey) => {
       ]
     }
 
-    Solo devuelve el JSON válido, sin bloques de código markdown ni texto adicional.
+    Solo devuelve el JSON válido, sin bloques de código markdown ni texto adicional. Trata de inferir el año actual (2024-2025) para las fechas.
   `;
 
   try {

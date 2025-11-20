@@ -48,8 +48,23 @@ export const useCurriculum = () => {
             return { status: 'error', message: 'Datos del trimestre no encontrados.' };
         }
 
-        // Week is 1-based, array is 0-based
-        const weekData = trimesterData.weeks[week - 1];
+        // Try to find week by explicit date range first
+        let weekData = trimesterData.weeks.find(w => {
+            if (!w.dateRange) return false;
+            const [startStr, endStr] = w.dateRange.split(' to ');
+            if (!startStr || !endStr) return false;
+            const start = new Date(startStr);
+            const end = new Date(endStr);
+            // Set end date to end of day
+            end.setHours(23, 59, 59, 999);
+            return now >= start && now <= end;
+        });
+
+        // Fallback to calculated week if no date match
+        if (!weekData) {
+            // Week is 1-based, array is 0-based
+            weekData = trimesterData.weeks[week - 1];
+        }
 
         if (!weekData) {
             return { status: 'error', message: 'Datos de la semana no encontrados.' };

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Cog6ToothIcon, CloudArrowUpIcon, CheckCircleIcon, ExclamationCircleIcon } from '@heroicons/react/24/outline';
-import { extractTextFromPdf } from '../../utils/fileProcessor';
-import { processCurriculumWithAI } from '../../services/aiService';
+import { extractTextFromPdf, extractDataFromExcel } from '../../utils/fileProcessor';
+import { processCurriculumWithAI, processStudentListWithAI } from '../../services/aiService';
 
 export default function SettingsView() {
     const [apiKey, setApiKey] = useState('');
@@ -25,8 +25,14 @@ export default function SettingsView() {
         const file = e.target.files[0];
         if (!file) return;
 
-        if (file.type !== 'application/pdf') {
-            setStatusMessage('Por favor, sube un archivo PDF válido.');
+        const validTypes = [
+            'application/pdf',
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            'application/vnd.ms-excel'
+        ];
+
+        if (!validTypes.includes(file.type)) {
+            setStatusMessage('Por favor, sube un archivo PDF o Excel válido.');
             setStatusType('error');
             return;
         }
@@ -38,31 +44,43 @@ export default function SettingsView() {
         }
 
         setIsProcessing(true);
-        setStatusMessage('Leyendo archivo PDF...');
+        setStatusMessage('Procesando archivo...');
         setStatusType('info');
 
         try {
-            // 1. Extract text from PDF
-            const text = await extractTextFromPdf(file);
+            if (file.type === 'application/pdf') {
+                // 1. Extract text from PDF
+                const text = await extractTextFromPdf(file);
+                setStatusMessage('Procesando plan de estudios con IA...');
 
-            setStatusMessage('Procesando con IA (esto puede tardar unos segundos)...');
+                // 2. Process with Gemini
+                const structuredData = await processCurriculumWithAI(text, apiKey);
 
-            // 2. Process with Gemini
-            const structuredData = await processCurriculumWithAI(text, apiKey);
+                // 3. Update Local Storage
+                const existingData = JSON.parse(localStorage.getItem('custom_curriculum') || '{}');
+                const gradeKey = structuredData.grade.replace('º', '');
+                const newData = { ...existingData, [gradeKey]: structuredData };
+                localStorage.setItem('custom_curriculum', JSON.stringify(newData));
 
-            // 3. Update Local Storage with new curriculum data
-            // We merge with existing data to not lose other grades if the PDF is only for one grade
-            const existingData = JSON.parse(localStorage.getItem('custom_curriculum') || '{}');
-            const gradeKey = structuredData.grade.replace('º', ''); // "2º" -> "2"
+                setStatusMessage(`¡Éxito! Plan de estudios de ${structuredData.grade} actualizado.`);
+            } else {
+                // Excel processing
+                setStatusMessage('Leyendo archivo Excel...');
+                const excelData = await extractDataFromExcel(file);
 
-            const newData = {
-                ...existingData,
-                [gradeKey]: structuredData
-            };
+                setStatusMessage('Procesando lista de alumnos con IA...');
+                // Pass the raw object to AI
+                const studentData = await processStudentListWithAI(excelData, apiKey);
 
-            localStorage.setItem('custom_curriculum', JSON.stringify(newData));
+                // Update students in localStorage
+                // Expected format from AI: { "2A": ["Name 1", ...], "2B": ... }
+                const existingStudents = JSON.parse(localStorage.getItem('students_by_class') || '{}');
+                const newStudents = { ...existingStudents, ...studentData };
+                localStorage.setItem('students_by_class', JSON.stringify(newStudents));
 
-            setStatusMessage(`¡Éxito! Plan de estudios de ${structuredData.grade} actualizado.`);
+                setStatusMessage('¡Éxito! Lista de alumnos actualizada.');
+            }
+
             setStatusType('success');
         } catch (error) {
             console.error(error);
@@ -173,19 +191,17 @@ export default function SettingsView() {
                     </div>
                 </div>
 
-                <hr className="border-gray-200 dark:border-gray-700 my-8" />
-
-                {/* PDF Import Section */}
+                {/* File Import Section */}
                 <div>
-                    <h3 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">Importar Plan de Estudios</h3>
+                    <h3 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">Importar Archivos</h3>
                     <p className="text-gray-600 dark:text-gray-300 mb-4 text-sm">
-                        Sube un archivo PDF con tu plan de estudios. La IA extraerá la estructura, temas y criterios de evaluación automáticamente.
+                        Sube un PDF para el plan de estudios o un Excel para la lista de alumnos. La IA procesará la información automáticamente.
                     </p>
 
                     <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-8 text-center hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors relative">
                         <input
                             type="file"
-                            accept=".pdf"
+                            accept=".pdf,.xlsx,.xls"
                             onChange={handleFileUpload}
                             disabled={isProcessing}
                             className="absolute inset-0 w-full h-full opacity-0 cursor-pointer disabled:cursor-not-allowed"
@@ -197,7 +213,7 @@ export default function SettingsView() {
                                 <CloudArrowUpIcon className="w-12 h-12 text-gray-400 mb-4" />
                             )}
                             <p className="text-gray-600 dark:text-gray-300 font-medium">
-                                {isProcessing ? 'Procesando archivo...' : 'Haz clic o arrastra un PDF aquí'}
+                                {isProcessing ? 'Procesando archivo...' : 'Haz clic o arrastra un PDF o Excel aquí'}
                             </p>
                             <p className="text-xs text-gray-400 mt-2">Máximo 10MB</p>
                         </div>
