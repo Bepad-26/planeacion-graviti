@@ -1,15 +1,5 @@
 import { Capacitor } from '@capacitor/core';
-
-// We'll try to import the plugin, but handle if it's missing during dev
-let Purchase;
-try {
-    // Attempt to import if available, otherwise mock
-    // Note: In a real environment, this would be a direct import
-    // import { Purchase as PurchasePlugin } from '@capgo/capacitor-purchase';
-    // Purchase = PurchasePlugin;
-} catch (e) {
-    console.warn('Purchase plugin not found');
-}
+import { Purchase } from '@capgo/capacitor-purchase';
 
 export const initializeStore = async () => {
     if (!Capacitor.isNativePlatform()) {
@@ -18,7 +8,9 @@ export const initializeStore = async () => {
     }
 
     try {
-        // await Purchase.initialize();
+        await Purchase.initialize({
+            apiKey: 'ignored_on_android', // Android doesn't use this, but iOS might need it or the plugin expects it
+        });
         console.log('Store initialized');
     } catch (error) {
         console.error('Store initialization failed', error);
@@ -28,14 +20,14 @@ export const initializeStore = async () => {
 export const purchaseProduct = async (productId) => {
     if (!Capacitor.isNativePlatform()) {
         console.log(`Web platform: Simulating purchase of ${productId}`);
+        // Simulate a delay
+        await new Promise(resolve => setTimeout(resolve, 1000));
         return { success: true, transactionId: 'simulated-trans-id' };
     }
 
     try {
-        // const result = await Purchase.purchase({ productId });
-        // return result;
-        console.log(`Native purchase of ${productId} initiated`);
-        return { success: true }; // Mock for now
+        const result = await Purchase.purchase({ productId });
+        return result;
     } catch (error) {
         console.error('Purchase failed', error);
         throw error;
@@ -44,12 +36,20 @@ export const purchaseProduct = async (productId) => {
 
 export const restorePurchases = async () => {
     if (!Capacitor.isNativePlatform()) {
+        console.log('Web platform: Simulating restore purchases');
         return;
     }
-    // await Purchase.restore();
+
+    try {
+        await Purchase.restore();
+    } catch (error) {
+        console.error('Restore failed', error);
+        throw error;
+    }
 };
 
 export const checkSubscriptionStatus = async () => {
-    // Logic to verify active subscription
+    // In a real app, you would validate the receipt with your backend here.
+    // For this standalone version, we might rely on local storage or the plugin's active entitlements.
     return false;
 };

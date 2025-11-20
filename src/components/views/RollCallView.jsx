@@ -8,13 +8,9 @@ export default function RollCallView() {
     const { getStudentsByClass, getAllClasses } = useStudents();
     const [selectedClass, setSelectedClass] = useState('2A');
     const [selectedTrimester, setSelectedTrimester] = useState('1');
-    const [attendance, setAttendance] = useState({});
-
-    // Load attendance from local storage on mount
-    useEffect(() => {
-        const savedAttendance = JSON.parse(localStorage.getItem('attendance') || '{}');
-        setAttendance(savedAttendance);
-    }, []);
+    const [attendance, setAttendance] = useState(() => {
+        return JSON.parse(localStorage.getItem('attendance') || '{}');
+    });
 
     // Save attendance to local storage whenever it changes
     useEffect(() => {

@@ -1,13 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useCurriculum } from '../../hooks/useCurriculum';
 
 export default function DailySummary() {
     const { getCurrentPlanTopic } = useCurriculum();
-    const [todaysClass, setTodaysClass] = useState(null);
-
-    useEffect(() => {
-        const plan = getCurrentPlanTopic();
-        setTodaysClass(plan);
+    const todaysClass = React.useMemo(() => {
+        return getCurrentPlanTopic();
     }, [getCurrentPlanTopic]);
 
     return (

@@ -1,0 +1,6 @@
+{
+    "appId": "com.planeacion.graviti",
+    "appName": "Planeacion Graviti",
+    "webDir": "dist",
+    "bundledWebRuntime": false
+}

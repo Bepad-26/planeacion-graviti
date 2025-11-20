@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Planeacion Graviti</string>
+    <string name="title_activity_main">Planeacion Graviti</string>
+    <string name="package_name">com.planeacion.graviti</string>
+    <string name="custom_url_scheme">com.planeacion.graviti</string>
+</resources>

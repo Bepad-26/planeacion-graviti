@@ -1,16 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { ChevronDownIcon, StarIcon } from '@heroicons/react/24/outline';
 import { StarIcon as StarIconSolid } from '@heroicons/react/24/solid';
 
 export default function FavoritesSection() {
     const [isOpen, setIsOpen] = useState(false);
-    const [favorites, setFavorites] = useState([]);
-
-    useEffect(() => {
-        // Load favorites from localStorage
-        const savedFavorites = JSON.parse(localStorage.getItem('favorites') || '[]');
-        setFavorites(savedFavorites);
-    }, []);
+    const [favorites] = useState(() => {
+        return JSON.parse(localStorage.getItem('favorites') || '[]');
+    });
 
     const toggleAccordion = () => setIsOpen(!isOpen);
 

@@ -1,29 +1,17 @@
-import { useState, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 import { curriculumData as defaultCurriculum } from '../data/curriculum';
 import { getSchoolWeek } from '../utils/dateUtils';
 
 export const useCurriculum = () => {
-    const [curriculum, setCurriculum] = useState(defaultCurriculum);
-    const [schoolSettings, setSchoolSettings] = useState({
-        startDate: '2024-08-26' // Default start date
+    const [curriculum] = useState(() => {
+        const savedCurriculum = localStorage.getItem('custom_curriculum');
+        return savedCurriculum ? { ...defaultCurriculum, ...JSON.parse(savedCurriculum) } : defaultCurriculum;
     });
 
-    useEffect(() => {
-        // Load custom curriculum and settings from local storage
-        const savedCurriculum = localStorage.getItem('custom_curriculum');
+    const [schoolSettings, setSchoolSettings] = useState(() => {
         const savedSettings = localStorage.getItem('school_settings');
-
-        if (savedCurriculum) {
-            setCurriculum(prev => ({
-                ...prev,
-                ...JSON.parse(savedCurriculum)
-            }));
-        }
-
-        if (savedSettings) {
-            setSchoolSettings(JSON.parse(savedSettings));
-        }
-    }, []);
+        return savedSettings ? JSON.parse(savedSettings) : { startDate: '2024-08-26' };
+    });
 
     const updateSchoolSettings = (newSettings) => {
         const updated = { ...schoolSettings, ...newSettings };
@@ -31,7 +19,7 @@ export const useCurriculum = () => {
         localStorage.setItem('school_settings', JSON.stringify(updated));
     };
 
-    const getCurrentPlanTopic = () => {
+    const getCurrentPlanTopic = useCallback(() => {
         const { week, trimester } = getSchoolWeek(schoolSettings.startDate);
         const now = new Date();
         const dayOfWeek = now.getDay(); // 0 = Sun, 1 = Mon...
@@ -81,13 +69,12 @@ export const useCurriculum = () => {
             trimesterTitle: trimesterData.title,
             trimesterNumber: trimester
         };
-    };
+    }, [curriculum, schoolSettings.startDate]);
 
     return {
         curriculum,
         schoolSettings,
         updateSchoolSettings,
-        getCurrentPlanning,
         getCurrentPlanTopic
     };
 };

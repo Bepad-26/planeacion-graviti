@@ -1,13 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 export const usePremium = () => {
-    const [isPro, setIsPro] = useState(false);
-
-    useEffect(() => {
-        // Check local storage or remote status
-        const status = localStorage.getItem('is_pro_active');
-        setIsPro(status === 'true');
-    }, []);
+    const [isPro, setIsPro] = useState(() => {
+        return localStorage.getItem('is_pro_active') === 'true';
+    });
 
     const activatePro = () => {
         setIsPro(true);

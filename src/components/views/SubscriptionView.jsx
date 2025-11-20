@@ -11,7 +11,7 @@ export default function SubscriptionView() {
             await purchaseProduct('plan_anual');
             activatePro();
             alert('¡Suscripción activada con éxito!');
-        } catch (error) {
+        } catch {
             alert('Error al procesar la compra.');
         }
     };
@@ -54,8 +54,8 @@ export default function SubscriptionView() {
                         onClick={handlePurchase}
                         disabled={isPro}
                         className={`w-full py-4 rounded-xl font-bold text-lg transition-all transform hover:scale-105 ${isPro
-                                ? 'bg-green-100 text-green-800 cursor-default'
-                                : 'bg-gradient-to-r from-amber-500 to-orange-600 text-white shadow-lg hover:shadow-xl'
+                            ? 'bg-green-100 text-green-800 cursor-default'
+                            : 'bg-gradient-to-r from-amber-500 to-orange-600 text-white shadow-lg hover:shadow-xl'
                             }`}
                     >
                         {isPro ? '¡Ya eres Pro!' : 'Suscribirme Ahora'}
