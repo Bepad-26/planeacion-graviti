@@ -43,12 +43,16 @@ export const processCurriculumWithAI = async (text, apiKey) => {
     const response = await result.response;
     const text = response.text();
 
-    // Clean up markdown code blocks if present
-    const jsonString = text.replace(/```json/g, '').replace(/```/g, '').trim();
-    return JSON.parse(jsonString);
+    // Improved JSON extraction: find the first '{' and the last '}'
+    const jsonMatch = text.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) {
+      throw new Error('No se encontró un JSON válido en la respuesta de la IA.');
+    }
+
+    return JSON.parse(jsonMatch[0]);
   } catch (error) {
     console.error('Error processing with AI:', error);
-    throw new Error('Error al procesar el plan de estudios con IA.');
+    throw new Error('Error al procesar el plan de estudios con IA: ' + error.message);
   }
 };
 
@@ -85,10 +89,14 @@ export const processStudentListWithAI = async (jsonData, apiKey) => {
     const response = await result.response;
     const text = response.text();
 
-    const jsonString = text.replace(/```json/g, '').replace(/```/g, '').trim();
-    return JSON.parse(jsonString);
+    const jsonMatch = text.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) {
+      throw new Error('No se encontró un JSON válido en la respuesta de la IA.');
+    }
+
+    return JSON.parse(jsonMatch[0]);
   } catch (error) {
     console.error('Error processing student list with AI:', error);
-    throw new Error('Error al procesar la lista de alumnos con IA.');
+    throw new Error('Error al procesar la lista de alumnos con IA: ' + error.message);
   }
 };

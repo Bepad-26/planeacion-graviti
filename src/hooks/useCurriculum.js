@@ -10,7 +10,8 @@ export const useCurriculum = () => {
 
     const [schoolSettings, setSchoolSettings] = useState(() => {
         const savedSettings = localStorage.getItem('school_settings');
-        return savedSettings ? JSON.parse(savedSettings) : { startDate: '2024-08-26', selectedGrade: '2' };
+        // Default to August 25, 2025 for the current testing context
+        return savedSettings ? JSON.parse(savedSettings) : { startDate: '2025-08-25', selectedGrade: '2' };
     });
 
     const updateSchoolSettings = (newSettings) => {

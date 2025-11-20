@@ -8,6 +8,7 @@ export default function RollCallView() {
     const { getStudentsByClass, getAllClasses } = useStudents();
     const [selectedClass, setSelectedClass] = useState('2A');
     const [selectedTrimester, setSelectedTrimester] = useState('1');
+    const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
     const [attendance, setAttendance] = useState(() => {
         return JSON.parse(localStorage.getItem('attendance') || '{}');
     });
@@ -18,8 +19,7 @@ export default function RollCallView() {
     }, [attendance]);
 
     const handleAttendanceClick = (studentName, status) => {
-        const date = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
-        const key = `${selectedClass}-${selectedTrimester}-${date}`;
+        const key = `${selectedClass}-${selectedTrimester}-${selectedDate}`;
 
         setAttendance(prev => ({
             ...prev,
@@ -31,8 +31,7 @@ export default function RollCallView() {
     };
 
     const getStudentStatus = (studentName) => {
-        const date = new Date().toISOString().split('T')[0];
-        const key = `${selectedClass}-${selectedTrimester}-${date}`;
+        const key = `${selectedClass}-${selectedTrimester}-${selectedDate}`;
         return attendance[key]?.[studentName] || null;
     };
 
@@ -40,11 +39,10 @@ export default function RollCallView() {
     const allClasses = getAllClasses();
 
     const exportToExcel = () => {
-        const date = new Date().toISOString().split('T')[0];
         const data = students.map(student => ({
             Nombre: student,
             Estado: getStudentStatus(student) || 'No registrado',
-            Fecha: date,
+            Fecha: selectedDate,
             Clase: selectedClass,
             Trimestre: selectedTrimester
         }));
@@ -52,7 +50,15 @@ export default function RollCallView() {
         const ws = XLSX.utils.json_to_sheet(data);
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, "Asistencia");
-        XLSX.writeFile(wb, `Asistencia_${selectedClass}_${date}.xlsx`);
+        XLSX.writeFile(wb, `Asistencia_${selectedClass}_${selectedDate}.xlsx`);
+    };
+
+    const getDayName = (dateStr) => {
+        const date = new Date(dateStr);
+        // Adjust for timezone offset to get correct day name
+        const userTimezoneOffset = date.getTimezoneOffset() * 60000;
+        const adjustedDate = new Date(date.getTime() + userTimezoneOffset);
+        return new Intl.DateTimeFormat('es-ES', { weekday: 'long' }).format(adjustedDate);
     };
 
     return (
@@ -62,7 +68,21 @@ export default function RollCallView() {
 
                 {/* Controls */}
                 <div className="flex flex-wrap justify-between items-end gap-4 mb-6">
-                    <div className="flex gap-4">
+                    <div className="flex flex-wrap gap-4">
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Fecha</label>
+                            <div className="flex items-center gap-2">
+                                <input
+                                    type="date"
+                                    value={selectedDate}
+                                    onChange={(e) => setSelectedDate(e.target.value)}
+                                    className="block w-full px-3 py-2 text-base border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-amber-500 focus:border-amber-500 sm:text-sm rounded-md dark:bg-gray-700 dark:text-white"
+                                />
+                                <span className="text-sm text-gray-500 dark:text-gray-400 capitalize">
+                                    {getDayName(selectedDate)}
+                                </span>
+                            </div>
+                        </div>
                         <div>
                             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Trimestre</label>
                             <select
