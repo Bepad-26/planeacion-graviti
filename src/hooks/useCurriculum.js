@@ -10,7 +10,7 @@ export const useCurriculum = () => {
 
     const [schoolSettings, setSchoolSettings] = useState(() => {
         const savedSettings = localStorage.getItem('school_settings');
-        return savedSettings ? JSON.parse(savedSettings) : { startDate: '2024-08-26' };
+        return savedSettings ? JSON.parse(savedSettings) : { startDate: '2024-08-26', selectedGrade: '2' };
     });
 
     const updateSchoolSettings = (newSettings) => {
@@ -32,12 +32,12 @@ export const useCurriculum = () => {
             };
         }
 
-        // Default to 2nd grade for now (could be made dynamic)
-        const grade = '2';
+        // Use configured grade or default to '2'
+        const grade = schoolSettings.selectedGrade || '2';
         const gradeData = curriculum[grade];
 
         if (!gradeData || !gradeData.trimesters) {
-            return { status: 'error', message: 'Datos del plan de estudios no encontrados.' };
+            return { status: 'error', message: `Datos del plan de estudios (${grade}º) no encontrados.` };
         }
 
         // Trimester is 1-based, array is 0-based
@@ -69,7 +69,7 @@ export const useCurriculum = () => {
             trimesterTitle: trimesterData.title,
             trimesterNumber: trimester
         };
-    }, [curriculum, schoolSettings.startDate]);
+    }, [curriculum, schoolSettings.startDate, schoolSettings.selectedGrade]);
 
     return {
         curriculum,

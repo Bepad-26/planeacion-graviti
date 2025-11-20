@@ -108,32 +108,69 @@ export default function SettingsView() {
 
                 {/* School Settings Section */}
                 <div className="mb-8">
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        Inicio del Ciclo Escolar
-                    </label>
-                    <div className="flex gap-2">
-                        <input
-                            type="date"
-                            id="schoolStartDate"
-                            className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-amber-500 focus:border-amber-500 dark:bg-gray-700 dark:text-white"
-                        />
-                        <button
-                            onClick={() => {
-                                const date = document.getElementById('schoolStartDate').value;
-                                if (date) {
-                                    localStorage.setItem('school_settings', JSON.stringify({ startDate: date }));
-                                    // Force reload to apply changes across app (simple way for now)
+                    <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">Configuración Escolar</h3>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {/* Grade Selection */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Grado Escolar
+                            </label>
+                            <select
+                                id="schoolGrade"
+                                defaultValue={JSON.parse(localStorage.getItem('school_settings') || '{}').selectedGrade || '2'}
+                                onChange={(e) => {
+                                    const currentSettings = JSON.parse(localStorage.getItem('school_settings') || '{}');
+                                    const newSettings = { ...currentSettings, selectedGrade: e.target.value };
+                                    localStorage.setItem('school_settings', JSON.stringify(newSettings));
                                     window.location.reload();
-                                }
-                            }}
-                            className="bg-amber-600 text-white px-4 py-2 rounded-lg hover:bg-amber-700 transition-colors font-medium"
-                        >
-                            Guardar Fecha
-                        </button>
+                                }}
+                                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-amber-500 focus:border-amber-500 dark:bg-gray-700 dark:text-white"
+                            >
+                                <option value="1">1º Grado</option>
+                                <option value="2">2º Grado</option>
+                                <option value="3">3º Grado</option>
+                                <option value="4">4º Grado</option>
+                                <option value="5">5º Grado</option>
+                                <option value="6">6º Grado</option>
+                            </select>
+                            <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
+                                Selecciona el grado para ver la planeación correspondiente.
+                            </p>
+                        </div>
+
+                        {/* Start Date Selection */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Inicio del Ciclo Escolar
+                            </label>
+                            <div className="flex gap-2">
+                                <input
+                                    type="date"
+                                    id="schoolStartDate"
+                                    defaultValue={JSON.parse(localStorage.getItem('school_settings') || '{}').startDate || '2024-08-26'}
+                                    className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-amber-500 focus:border-amber-500 dark:bg-gray-700 dark:text-white"
+                                />
+                                <button
+                                    onClick={() => {
+                                        const date = document.getElementById('schoolStartDate').value;
+                                        if (date) {
+                                            const currentSettings = JSON.parse(localStorage.getItem('school_settings') || '{}');
+                                            const newSettings = { ...currentSettings, startDate: date };
+                                            localStorage.setItem('school_settings', JSON.stringify(newSettings));
+                                            window.location.reload();
+                                        }
+                                    }}
+                                    className="bg-amber-600 text-white px-4 py-2 rounded-lg hover:bg-amber-700 transition-colors font-medium"
+                                >
+                                    Guardar
+                                </button>
+                            </div>
+                            <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
+                                Define cuándo inicia el ciclo para calcular la semana.
+                            </p>
+                        </div>
                     </div>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                        Define cuándo inicia el ciclo para calcular automáticamente la semana actual.
-                    </p>
                 </div>
 
                 <hr className="border-gray-200 dark:border-gray-700 my-8" />
