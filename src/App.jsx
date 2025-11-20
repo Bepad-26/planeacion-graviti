@@ -7,6 +7,7 @@ import RollCallView from './components/views/RollCallView';
 import NotebookView from './components/views/NotebookView';
 import EvaluationView from './components/views/EvaluationView';
 import SettingsView from './components/views/SettingsView';
+import SubscriptionView from './components/views/SubscriptionView';
 
 function App() {
   const [activeView, setActiveView] = useState('home');
@@ -19,6 +20,7 @@ function App() {
       case 'notebook': return <NotebookView />;
       case 'evaluation': return <EvaluationView />;
       case 'settings': return <SettingsView />;
+      case 'subscription': return <SubscriptionView />;
       default: return <HomeView />;
     }
   };

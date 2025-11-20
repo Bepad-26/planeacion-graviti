@@ -1,13 +1,20 @@
 import React, { useState } from 'react';
 import { SparklesIcon } from '@heroicons/react/24/solid';
+import { usePremium } from '../../hooks/usePremium';
 
 export default function AiEditorSection() {
+    const { isPro, activatePro } = usePremium();
     const [note, setNote] = useState('');
     const [aiResult, setAiResult] = useState('');
     const [isLoading, setIsLoading] = useState(false);
 
     // Placeholder for actual Gemini integration
     const handleAiAction = async (action) => {
+        if (!isPro) {
+            setAiResult("Esta función requiere la versión Pro. ¿Deseas activarla?");
+            return;
+        }
+
         setIsLoading(true);
         setAiResult('');
 
@@ -34,7 +41,16 @@ export default function AiEditorSection() {
 
     return (
         <div className="mt-8 bg-white dark:bg-gray-800 rounded-2xl shadow-md border border-gray-200 dark:border-gray-700 p-6 transition-colors">
-            <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-4">Cuaderno de Notas con IA</h2>
+            <div className="flex justify-between items-center mb-4">
+                <h2 className="text-2xl font-bold text-gray-800 dark:text-white">Cuaderno de Notas con IA</h2>
+                {!isPro && (
+                    <span className="bg-gray-200 text-gray-600 text-xs font-bold px-2 py-1 rounded uppercase">Gratis</span>
+                )}
+                {isPro && (
+                    <span className="bg-amber-100 text-amber-800 text-xs font-bold px-2 py-1 rounded uppercase">Pro Activo</span>
+                )}
+            </div>
+
             <textarea
                 value={note}
                 onChange={(e) => setNote(e.target.value)}
@@ -74,7 +90,17 @@ export default function AiEditorSection() {
                             <span>Procesando con IA...</span>
                         </div>
                     ) : (
-                        <p>{aiResult}</p>
+                        <div>
+                            <p>{aiResult}</p>
+                            {aiResult.includes('requiere la versión Pro') && (
+                                <button
+                                    onClick={activatePro}
+                                    className="mt-2 text-amber-600 font-bold hover:underline"
+                                >
+                                    Activar Pro (Simulación)
+                                </button>
+                            )}
+                        </div>
                     )}
                 </div>
             )}
