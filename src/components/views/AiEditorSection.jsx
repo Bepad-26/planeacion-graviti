@@ -1,42 +1,64 @@
 import React, { useState } from 'react';
-import { SparklesIcon } from '@heroicons/react/24/solid';
+import { SparklesIcon, MicrophoneIcon } from '@heroicons/react/24/solid';
 import { usePremium } from '../../hooks/usePremium';
+import { processTextWithAI } from '../../services/aiService';
 
 export default function AiEditorSection() {
     const { isPro, activatePro } = usePremium();
     const [note, setNote] = useState('');
     const [aiResult, setAiResult] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [isListening, setIsListening] = useState(false);
 
-    // Placeholder for actual Gemini integration
+    const handleVoiceInput = () => {
+        if (!('webkitSpeechRecognition' in window)) {
+            alert('Tu navegador no soporta la entrada de voz. Intenta usar Chrome.');
+            return;
+        }
+
+        const recognition = new window.webkitSpeechRecognition();
+        recognition.lang = 'es-ES';
+        recognition.continuous = false;
+        recognition.interimResults = false;
+
+        recognition.onstart = () => setIsListening(true);
+        recognition.onend = () => setIsListening(false);
+        recognition.onerror = (event) => {
+            console.error(event.error);
+            setIsListening(false);
+        };
+
+        recognition.onresult = (event) => {
+            const transcript = event.results[0][0].transcript;
+            setNote(prev => prev + (prev ? ' ' : '') + transcript);
+        };
+
+        recognition.start();
+    };
+
     const handleAiAction = async (action) => {
         if (!isPro) {
             setAiResult("Esta función requiere la versión Pro. ¿Deseas activarla?");
             return;
         }
 
+        const apiKey = localStorage.getItem('gemini_api_key');
+        if (!apiKey) {
+            setAiResult("Error: No has configurado tu API Key de Gemini en Ajustes.");
+            return;
+        }
+
         setIsLoading(true);
         setAiResult('');
 
-        // Simulate API delay
-        setTimeout(() => {
-            let resultText = '';
-            switch (action) {
-                case 'summarize':
-                    resultText = "Resumen generado por IA: " + note.substring(0, 50) + "...";
-                    break;
-                case 'correct':
-                    resultText = "Texto corregido: " + note + " (Correcciones aplicadas)";
-                    break;
-                case 'expand':
-                    resultText = "Texto expandido con ideas creativas basadas en: " + note;
-                    break;
-                default:
-                    resultText = "Acción no reconocida.";
-            }
-            setAiResult(resultText);
+        try {
+            const result = await processTextWithAI(note, action, apiKey);
+            setAiResult(result);
+        } catch (error) {
+            setAiResult(`Error: ${error.message}`);
+        } finally {
             setIsLoading(false);
-        }, 1500);
+        }
     };
 
     return (
@@ -51,12 +73,21 @@ export default function AiEditorSection() {
                 )}
             </div>
 
-            <textarea
-                value={note}
-                onChange={(e) => setNote(e.target.value)}
-                className="w-full h-40 p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-amber-500 focus:border-amber-500 dark:bg-gray-700 dark:text-white transition-colors"
-                placeholder="Escribe tus notas, ideas o una comunicación para un padre de familia aquí..."
-            ></textarea>
+            <div className="relative">
+                <textarea
+                    value={note}
+                    onChange={(e) => setNote(e.target.value)}
+                    className="w-full h-40 p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-amber-500 focus:border-amber-500 dark:bg-gray-700 dark:text-white transition-colors pr-12"
+                    placeholder="Escribe tus notas, ideas o una comunicación para un padre de familia aquí..."
+                ></textarea>
+                <button
+                    onClick={handleVoiceInput}
+                    className={`absolute right-3 bottom-3 p-2 rounded-full transition-colors ${isListening ? 'bg-red-500 text-white animate-pulse' : 'bg-gray-100 text-gray-500 hover:bg-gray-200 dark:bg-gray-600 dark:text-gray-300'}`}
+                    title="Dictar nota"
+                >
+                    <MicrophoneIcon className="w-5 h-5" />
+                </button>
+            </div>
 
             <div className="flex flex-wrap gap-2 mt-4">
                 <button

@@ -1,5 +1,5 @@
 import React from 'react';
-import { HomeIcon, CalendarIcon, ClipboardDocumentListIcon, ChartBarIcon, BookOpenIcon, Cog6ToothIcon, StarIcon } from '@heroicons/react/24/outline';
+import { HomeIcon, CalendarIcon, ClipboardDocumentListIcon, ChartBarIcon, BookOpenIcon, Cog6ToothIcon, StarIcon, PresentationChartLineIcon, FolderIcon, CalendarDaysIcon, DocumentTextIcon, AcademicCapIcon } from '@heroicons/react/24/outline';
 
 export default function BottomNav({ activeView, onViewChange }) {
     const navItems = [
@@ -7,6 +7,11 @@ export default function BottomNav({ activeView, onViewChange }) {
         { id: 'planner', label: 'Planeación', icon: CalendarIcon },
         { id: 'roll-call', label: 'Asistencia', icon: ClipboardDocumentListIcon },
         { id: 'evaluation', label: 'Evaluación', icon: ChartBarIcon },
+        { id: 'analytics', label: 'Dashboard', icon: PresentationChartLineIcon },
+        { id: 'resources', label: 'Recursos', icon: FolderIcon },
+        { id: 'activity-planner', label: 'Agenda', icon: CalendarDaysIcon },
+        { id: 'reports', label: 'Reportes', icon: DocumentTextIcon },
+        { id: 'exam-generator', label: 'Exámenes', icon: AcademicCapIcon },
         { id: 'notebook', label: 'Cuaderno', icon: BookOpenIcon },
         { id: 'subscription', label: 'Premium', icon: StarIcon },
         { id: 'settings', label: 'Ajustes', icon: Cog6ToothIcon },

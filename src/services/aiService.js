@@ -107,7 +107,37 @@ export const processStudentListWithAI = async (jsonData, apiKey) => {
 
     return JSON.parse(jsonMatch[0]);
   } catch (error) {
-    console.error('Error processing student list with AI:', error);
     throw new Error('Error al procesar la lista de alumnos con IA: ' + error.message);
+  }
+};
+
+export const processTextWithAI = async (text, action, apiKey) => {
+  if (!apiKey) throw new Error('API Key no proporcionada');
+
+  const genAI = new GoogleGenerativeAI(apiKey);
+  const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+
+  let prompt = '';
+  switch (action) {
+    case 'summarize':
+      prompt = `Actúa como un asistente educativo. Resume el siguiente texto de manera concisa y clara:\n\n"${text}"`;
+      break;
+    case 'correct':
+      prompt = `Actúa como un editor profesional. Corrige la ortografía y gramática del siguiente texto, manteniendo el tono original:\n\n"${text}"`;
+      break;
+    case 'expand':
+      prompt = `Actúa como un asistente creativo. Expande las siguientes ideas con detalles relevantes y sugerencias prácticas para un contexto educativo:\n\n"${text}"`;
+      break;
+    default:
+      throw new Error('Acción no válida');
+  }
+
+  try {
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    return response.text();
+  } catch (error) {
+    console.error('Error processing text with AI:', error);
+    throw new Error('Error al procesar texto con IA: ' + error.message);
   }
 };

@@ -6,7 +6,7 @@ import { ArrowLeftIcon, DocumentTextIcon, CloudArrowUpIcon } from '@heroicons/re
 import * as XLSX from 'xlsx';
 
 export default function EvaluationView() {
-    const { studentLists, updateStudentLists, getAllClasses } = useStudents();
+    const { studentLists, updateStudentLists, getAllClasses, updateStudentDetail, getStudentDetail } = useStudents();
     const [selectedStudent, setSelectedStudent] = useState(null);
     const [selectedClass, setSelectedClass] = useState(getAllClasses()[0] || '2A');
     const [isUploading, setIsUploading] = useState(false);
@@ -217,6 +217,17 @@ export default function EvaluationView() {
                         <div>
                             <h2 className="text-2xl font-bold text-gray-800 dark:text-white">{selectedStudent}</h2>
                             <p className="text-gray-500 dark:text-gray-400">{selectedClass} - Primaria</p>
+
+                            {/* Birthday Input */}
+                            <div className="mt-2 flex items-center gap-2">
+                                <label className="text-xs font-medium text-gray-500 dark:text-gray-400">Cumpleaños:</label>
+                                <input
+                                    type="date"
+                                    className="text-xs p-1 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                                    value={getStudentDetail(selectedStudent).birthday || ''}
+                                    onChange={(e) => updateStudentDetail(selectedStudent, 'birthday', e.target.value)}
+                                />
+                            </div>
                         </div>
                         <div className="flex gap-2">
                             <button className="bg-indigo-600 text-white px-3 py-2 rounded-lg text-sm hover:bg-indigo-700 flex items-center gap-1">

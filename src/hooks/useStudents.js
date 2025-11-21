@@ -28,10 +28,35 @@ export function useStudents() {
         return Object.keys(studentLists);
     };
 
+    const [studentDetails, setStudentDetails] = useState(() => {
+        return JSON.parse(localStorage.getItem('student_details') || '{}');
+    });
+
+    const updateStudentDetail = (studentName, detail, value) => {
+        setStudentDetails(prev => {
+            const updated = {
+                ...prev,
+                [studentName]: {
+                    ...prev[studentName],
+                    [detail]: value
+                }
+            };
+            localStorage.setItem('student_details', JSON.stringify(updated));
+            return updated;
+        });
+    };
+
+    const getStudentDetail = (studentName) => {
+        return studentDetails[studentName] || {};
+    };
+
     return {
         studentLists,
         updateStudentLists,
         getStudentsByClass,
-        getAllClasses
+        getAllClasses,
+        studentDetails,
+        updateStudentDetail,
+        getStudentDetail
     };
 }
