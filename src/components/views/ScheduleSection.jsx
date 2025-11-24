@@ -6,14 +6,27 @@ export default function ScheduleSection() {
     const { getCurrentPlanTopic } = useCurriculum();
     const planData = getCurrentPlanTopic();
     const [isOpen, setIsOpen] = React.useState(true);
+    const [manualActivities, setManualActivities] = React.useState([]);
+
+    React.useEffect(() => {
+        const savedActivities = JSON.parse(localStorage.getItem('weekly_planner_activities') || '{}');
+        const days = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+        const today = days[new Date().getDay()];
+
+        if (savedActivities[today] && savedActivities[today].length > 0) {
+            setManualActivities(savedActivities[today].map(a => a.title));
+        }
+    }, []);
 
     const toggleAccordion = () => setIsOpen(!isOpen);
 
-    if (planData.status === 'weekend' || planData.status === 'error') {
-        return null; // Don't show schedule on weekends or errors
-    }
+    // Use manual activities if available, otherwise fallback to AI plan
+    const subjects = manualActivities.length > 0 ? manualActivities : (planData.subjects || []);
 
-    const subjects = planData.subjects || [];
+    // Only hide if NO data source has info (and it's not a weekend/error for AI)
+    if (subjects.length === 0 && (planData.status === 'weekend' || planData.status === 'error')) {
+        return null;
+    }
 
     return (
         <div className="mb-8 bg-white dark:bg-gray-800 rounded-2xl shadow-md border border-gray-200 dark:border-gray-700 overflow-hidden transition-colors">

@@ -43,16 +43,23 @@ function DayColumn({ day, activities }) {
 }
 
 export default function ActivityPlanner() {
-    const [activities, setActivities] = useState({
-        'Lunes': [
-            { id: '1', title: 'Matemáticas: Sumas', duration: 45 },
-            { id: '2', title: 'Español: Lectura', duration: 30 }
-        ],
-        'Martes': [],
-        'Miércoles': [],
-        'Jueves': [],
-        'Viernes': []
+    const [activities, setActivities] = useState(() => {
+        const saved = localStorage.getItem('weekly_planner_activities');
+        return saved ? JSON.parse(saved) : {
+            'Lunes': [
+                { id: '1', title: 'Matemáticas: Sumas', duration: 45 },
+                { id: '2', title: 'Español: Lectura', duration: 30 }
+            ],
+            'Martes': [],
+            'Miércoles': [],
+            'Jueves': [],
+            'Viernes': []
+        };
     });
+
+    React.useEffect(() => {
+        localStorage.setItem('weekly_planner_activities', JSON.stringify(activities));
+    }, [activities]);
 
     const sensors = useSensors(
         useSensor(PointerSensor),

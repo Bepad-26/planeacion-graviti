@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Cog6ToothIcon, CloudArrowUpIcon, CheckCircleIcon, ExclamationCircleIcon } from '@heroicons/react/24/outline';
 import { extractTextFromPdf, extractDataFromExcel } from '../../utils/fileProcessor';
 import { processCurriculumWithAI, processStudentListWithAI } from '../../services/aiService';
+import { useCurriculum } from '../../hooks/useCurriculum';
 
 export default function SettingsView() {
+    const { schoolSettings, updateSchoolSettings } = useCurriculum();
     const [apiKey, setApiKey] = useState('');
     const [isProcessing, setIsProcessing] = useState(false);
     const [statusMessage, setStatusMessage] = useState('');
@@ -97,6 +99,44 @@ export default function SettingsView() {
                 <div className="flex items-center gap-3 mb-6">
                     <Cog6ToothIcon className="w-8 h-8 text-gray-700 dark:text-gray-300" />
                     <h2 className="text-3xl font-bold text-gray-800 dark:text-white">Configuración</h2>
+                </div>
+
+                {/* School Settings Section */}
+                <div className="mb-8 border-b border-gray-200 dark:border-gray-700 pb-6">
+                    <h3 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">Ciclo Escolar</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                Grado Escolar
+                            </label>
+                            <select
+                                value={schoolSettings.selectedGrade}
+                                onChange={(e) => updateSchoolSettings({ selectedGrade: e.target.value })}
+                                className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"
+                            >
+                                <option value="1">1º Grado</option>
+                                <option value="2">2º Grado</option>
+                                <option value="3">3º Grado</option>
+                                <option value="4">4º Grado</option>
+                                <option value="5">5º Grado</option>
+                                <option value="6">6º Grado</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                Inicio del Ciclo (Auto-detectado)
+                            </label>
+                            <input
+                                type="date"
+                                value={schoolSettings.startDate}
+                                onChange={(e) => updateSchoolSettings({ startDate: e.target.value })}
+                                className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"
+                            />
+                            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                Se detecta automáticamente al subir tu PDF.
+                            </p>
+                        </div>
+                    </div>
                 </div>
 
                 {/* API Key Section */}

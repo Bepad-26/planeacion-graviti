@@ -10,8 +10,7 @@ export const useCurriculum = () => {
 
     const [schoolSettings, setSchoolSettings] = useState(() => {
         const savedSettings = localStorage.getItem('school_settings');
-        // Default to August 25, 2025 for the current testing context
-        return savedSettings ? JSON.parse(savedSettings) : { startDate: '2025-08-25', selectedGrade: '2' };
+        return savedSettings ? JSON.parse(savedSettings) : { startDate: '', selectedGrade: '2' };
     });
 
     const updateSchoolSettings = (newSettings) => {
@@ -19,6 +18,24 @@ export const useCurriculum = () => {
         setSchoolSettings(updated);
         localStorage.setItem('school_settings', JSON.stringify(updated));
     };
+
+    // Auto-detect start date from curriculum if not set or if curriculum updates
+    if (curriculum && (!schoolSettings.startDate || schoolSettings.autoDetected)) {
+        const grade = schoolSettings.selectedGrade || Object.keys(curriculum)[0];
+        if (grade && curriculum[grade]) {
+            const firstTrimester = curriculum[grade].trimesters[0];
+            if (firstTrimester && firstTrimester.weeks && firstTrimester.weeks.length > 0) {
+                const firstWeek = firstTrimester.weeks[0];
+                if (firstWeek.dateRange) {
+                    const startDate = firstWeek.dateRange.split(' to ')[0];
+                    if (startDate && startDate !== schoolSettings.startDate) {
+                        console.log('Auto-detecting start date from curriculum:', startDate);
+                        updateSchoolSettings({ startDate, autoDetected: true });
+                    }
+                }
+            }
+        }
+    }
 
     const getCurrentPlanTopic = useCallback(() => {
         const now = new Date();

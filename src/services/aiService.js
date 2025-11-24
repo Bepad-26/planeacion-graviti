@@ -7,45 +7,45 @@ export const processCurriculumWithAI = async (text, apiKey) => {
   const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
   const prompt = `
-    Actúa como un experto en educación y planificación curricular. Analiza el siguiente texto extraído de un PDF de planificación escolar (que puede ser un calendario, una tabla o una lista) y extrae la información estructurada.
+    Actúa como un experto en educación y planificación curricular. Analiza el siguiente texto extraído de un PDF de planificación escolar y genera un JSON estructurado.
 
     TEXTO DEL PDF:
     "${text}"
 
     OBJETIVO:
-    Generar un JSON válido con la estructura exacta que se describe a continuación. Debes inferir el grado escolar si es posible, si no, usa "General".
-    Es CRÍTICO que extraigas el rango de fechas exacto para cada semana y el horario de clases específico para cada día si está disponible.
+    Extraer el plan de estudios completo, incluyendo rangos de fechas EXACTOS para cada semana y el horario de clases.
 
     ESTRUCTURA JSON REQUERIDA:
     {
-        "grade": "2º", // O el grado que detectes
+        "grade": "2º", // Infiere el grado
         "trimesters": [
             {
                 "title": "Trimestre 1",
                 "weeks": [
                     {
                         "week": 1,
-                        "title": "Nombre del tema o proyecto de la semana",
-                        "dateRange": "YYYY-MM-DD to YYYY-MM-DD", // EJEMPLO: "2025-08-25 to 2025-08-29". INFIERE EL AÑO 2024-2025.
-                        "schedule": { // Horario específico detectado o inferido
-                            "Monday": ["Matemáticas", "Español"],
-                            "Tuesday": ["Ciencias", "Historia"],
-                            "Wednesday": ["Matemáticas", "Arte"],
-                            "Thursday": ["Español", "Ed. Física"],
-                            "Friday": ["Repaso", "Club"]
+                        "title": "Tema de la semana",
+                        "dateRange": "YYYY-MM-DD to YYYY-MM-DD", // CRÍTICO: Infiere el año actual (2024-2025) si no está explícito. Ej: "2025-08-25 to 2025-08-29".
+                        "schedule": { // Horario DETALLADO. Si no hay horario por día, genera uno lógico basado en las materias del texto.
+                            "Monday": ["Materia 1", "Materia 2", ...],
+                            "Tuesday": ["Materia 1", ...],
+                            "Wednesday": [...],
+                            "Thursday": [...],
+                            "Friday": [...]
                         },
-                        "class1": "Descripción detallada de la actividad principal o Clase 1",
-                        "class2": "Descripción detallada de la actividad secundaria o Clase 2"
+                        "class1": "Resumen actividad principal",
+                        "class2": "Resumen actividad secundaria"
                     }
                 ]
             }
         ]
     }
 
-    REGLAS:
-    1. Si el texto menciona fechas (ej. "Semana del 26 al 30 de Agosto"), conviértelas a formato "YYYY-MM-DD to YYYY-MM-DD" asumiendo el ciclo escolar actual (2024-2025 o 2025-2026 según corresponda).
-    2. Si no hay horario explícito, genera uno genérico basado en las materias mencionadas en el texto.
-    3. Devuelve SOLO el JSON, sin markdown, sin bloques de código, sin texto adicional.
+    REGLAS CRÍTICAS:
+    1. **FECHAS**: Debes generar un \`dateRange\` válido para CADA semana. Si el texto dice "Semana 1", asume que empieza en la fecha más lógica mencionada en el documento o a finales de Agosto.
+    2. **HORARIO**: El campo \`schedule\` es OBLIGATORIO. Si el PDF tiene un horario general, repítelo en todas las semanas. Si varía, adáptalo. NO dejes días vacíos.
+    3. **AÑO**: Si el PDF no tiene año, asume el ciclo escolar actual (2025-2026 o el que corresponda a la fecha actual).
+    4. Devuelve SOLO el JSON.
   `;
 
   try {
