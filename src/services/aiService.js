@@ -4,7 +4,7 @@ export const processCurriculumWithAI = async (text, apiKey) => {
   if (!apiKey) throw new Error('API Key no proporcionada');
 
   const genAI = new GoogleGenerativeAI(apiKey);
-  const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+  const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
 
   const prompt = `
     Actúa como un experto en educación y planificación curricular. Analiza el siguiente texto extraído de un PDF de planificación escolar y genera un JSON estructurado.
@@ -71,7 +71,7 @@ export const processStudentListWithAI = async (jsonData, apiKey) => {
   if (!apiKey) throw new Error('API Key no proporcionada');
 
   const genAI = new GoogleGenerativeAI(apiKey);
-  const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+  const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
 
   const prompt = `
     Actúa como un experto en procesamiento de datos. Analiza el siguiente array de datos JSON que proviene de un archivo Excel con una lista de alumnos.
@@ -115,7 +115,7 @@ export const processTextWithAI = async (text, action, apiKey) => {
   if (!apiKey) throw new Error('API Key no proporcionada');
 
   const genAI = new GoogleGenerativeAI(apiKey);
-  const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+  const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
 
   let prompt = '';
   switch (action) {
