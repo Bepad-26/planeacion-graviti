@@ -1,10 +1,50 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
+// Helper function for robust JSON parsing
+const robustJSONParse = (text) => {
+  // 1. Remove markdown code blocks
+  let cleanText = text.replace(/```json/g, '').replace(/```/g, '').trim();
+
+  try {
+    return JSON.parse(cleanText);
+  } catch (e) {
+    console.warn('Direct JSON parse failed, trying regex extraction...', e);
+    // 2. Try to extract JSON object or array
+    const jsonMatch = cleanText.match(/(\{[\s\S]*\}|\[[\s\S]*\])/);
+    if (jsonMatch) {
+      try {
+        return JSON.parse(jsonMatch[0]);
+      } catch (e2) {
+        throw new Error('Failed to parse extracted JSON: ' + e2.message);
+      }
+    }
+    throw new Error('No valid JSON found in response.');
+  }
+};
+
+// Helper function for AI calls with retry
+const callAIWithRetry = async (model, prompt, retries = 1) => {
+  for (let i = 0; i <= retries; i++) {
+    try {
+      const result = await model.generateContent(prompt);
+      const response = await result.response;
+      return response.text();
+    } catch (error) {
+      if (i === retries) throw error;
+      console.warn(`AI call failed, retrying (${i + 1}/${retries})...`, error);
+      await new Promise(resolve => setTimeout(resolve, 1000)); // Wait 1s before retry
+    }
+  }
+};
+
 export const processCurriculumWithAI = async (text, apiKey) => {
   if (!apiKey) throw new Error('API Key no proporcionada');
 
   const genAI = new GoogleGenerativeAI(apiKey);
-  const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
+  const model = genAI.getGenerativeModel({
+    model: 'gemini-2.0-flash',
+    generationConfig: { responseMimeType: 'application/json' }
+  });
 
   const prompt = `
     Actúa como un experto en educación y planificación curricular. Analiza el siguiente texto extraído de un PDF de planificación escolar y genera un JSON estructurado.
@@ -49,20 +89,11 @@ export const processCurriculumWithAI = async (text, apiKey) => {
   `;
 
   try {
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    const text = response.text();
-    console.log('AI Raw Response:', text);
-
-    // Improved JSON extraction: find the first '{' and the last '}'
-    const jsonMatch = text.match(/\{[\s\S]*\}/);
-    if (!jsonMatch) {
-      throw new Error('No se encontró un JSON válido en la respuesta de la IA.');
-    }
-
-    return JSON.parse(jsonMatch[0]);
+    const textResponse = await callAIWithRetry(model, prompt);
+    console.log('AI Raw Response (Curriculum):', textResponse);
+    return robustJSONParse(textResponse);
   } catch (error) {
-    console.error('Error processing with AI:', error);
+    console.error('Error processing curriculum with AI:', error);
     throw new Error('Error al procesar el plan de estudios con IA: ' + error.message);
   }
 };
@@ -71,7 +102,10 @@ export const processStudentListWithAI = async (jsonData, apiKey) => {
   if (!apiKey) throw new Error('API Key no proporcionada');
 
   const genAI = new GoogleGenerativeAI(apiKey);
-  const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
+  const model = genAI.getGenerativeModel({
+    model: 'gemini-2.0-flash',
+    generationConfig: { responseMimeType: 'application/json' }
+  });
 
   const prompt = `
     Actúa como un experto en procesamiento de datos. Analiza el siguiente array de datos JSON que proviene de un archivo Excel con una lista de alumnos.
@@ -96,16 +130,9 @@ export const processStudentListWithAI = async (jsonData, apiKey) => {
   `;
 
   try {
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    const text = response.text();
-
-    const jsonMatch = text.match(/\{[\s\S]*\}/);
-    if (!jsonMatch) {
-      throw new Error('No se encontró un JSON válido en la respuesta de la IA.');
-    }
-
-    return JSON.parse(jsonMatch[0]);
+    const textResponse = await callAIWithRetry(model, prompt);
+    console.log('AI Raw Response (Students):', textResponse);
+    return robustJSONParse(textResponse);
   } catch (error) {
     throw new Error('Error al procesar la lista de alumnos con IA: ' + error.message);
   }
@@ -133,9 +160,7 @@ export const processTextWithAI = async (text, action, apiKey) => {
   }
 
   try {
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    return response.text();
+    return await callAIWithRetry(model, prompt);
   } catch (error) {
     console.error('Error processing text with AI:', error);
     throw new Error('Error al procesar texto con IA: ' + error.message);
