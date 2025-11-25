@@ -45,26 +45,86 @@ export default function ScheduleSection() {
 
             <div className={`transition-all duration-500 ease-in-out overflow-hidden ${isOpen ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'}`}>
                 <div className="p-6 pt-0">
-                    {subjects.length > 0 ? (
-                        <div className="space-y-3">
-                            {subjects.map((subject, index) => (
-                                <div key={index} className="flex items-center p-4 bg-stone-50 dark:bg-gray-700/50 rounded-xl border border-gray-100 dark:border-gray-600 hover:border-amber-200 dark:hover:border-amber-500/50 transition-colors">
-                                    <div className="h-10 w-10 rounded-full bg-white dark:bg-gray-600 flex items-center justify-center shadow-sm mr-4 border border-gray-100 dark:border-gray-500">
-                                        <span className="font-bold text-amber-600 dark:text-amber-400">{index + 1}</span>
-                                    </div>
-                                    <div className="flex-1">
-                                        <h3 className="font-semibold text-gray-800 dark:text-white text-lg">{subject}</h3>
-                                        <p className="text-sm text-gray-500 dark:text-gray-400">Sesión {index + 1}</p>
-                                    </div>
-                                    <BookOpenIcon className="w-5 h-5 text-gray-400" />
-                                </div>
-                            ))}
-                        </div>
-                    ) : (
-                        <p className="text-gray-500 dark:text-gray-400 text-center py-4">
-                            No hay materias específicas detectadas para hoy.
-                        </p>
-                    )}
+                    <div className="overflow-x-auto">
+                        <table className="w-full border-collapse text-center">
+                            <thead>
+                                <tr className="bg-stone-50 dark:bg-gray-700">
+                                    <th className="p-2 text-xs font-semibold text-gray-600 dark:text-gray-300 border dark:border-gray-600">Hora</th>
+                                    <th className="p-2 text-xs font-semibold text-gray-600 dark:text-gray-300 border dark:border-gray-600">Lunes</th>
+                                    <th className="p-2 text-xs font-semibold text-gray-600 dark:text-gray-300 border dark:border-gray-600">Martes</th>
+                                    <th className="p-2 text-xs font-semibold text-gray-600 dark:text-gray-300 border dark:border-gray-600">Miércoles</th>
+                                    <th className="p-2 text-xs font-semibold text-gray-600 dark:text-gray-300 border dark:border-gray-600">Jueves</th>
+                                    <th className="p-2 text-xs font-semibold text-gray-600 dark:text-gray-300 border dark:border-gray-600">Viernes</th>
+                                </tr>
+                            </thead>
+                            <tbody className="text-sm">
+                                <tr>
+                                    <td className="p-2 border dark:border-gray-600 font-medium text-gray-700 dark:text-gray-300">7:40 - 8:00</td>
+                                    <td className="p-2 border dark:border-gray-600"></td>
+                                    <td className="p-2 border dark:border-gray-600"></td>
+                                    <td className="p-2 border dark:border-gray-600"></td>
+                                    <td className="p-2 border dark:border-gray-600"></td>
+                                    <td className="p-2 border dark:border-gray-600"></td>
+                                </tr>
+                                <tr>
+                                    <td className="p-2 border dark:border-gray-600 font-medium text-gray-700 dark:text-gray-300">8:00 - 8:55</td>
+                                    <td className="p-2 border dark:border-gray-600"></td>
+                                    <td className="p-2 border dark:border-gray-600"></td>
+                                    <td className="p-2 border dark:border-gray-600"></td>
+                                    <td className="p-2 border dark:border-gray-600"></td>
+                                    <td className="p-2 border dark:border-gray-600"></td>
+                                </tr>
+                                <tr>
+                                    <td className="p-2 border dark:border-gray-600 font-medium text-gray-700 dark:text-gray-300">8:55 - 9:50</td>
+                                    <td className="p-2 border dark:border-gray-600 bg-violet-100 dark:bg-violet-900/50 text-violet-800 dark:text-violet-200 font-bold">4º B</td>
+                                    <td className="p-2 border dark:border-gray-600 bg-sky-100 dark:bg-sky-900/50 text-sky-800 dark:text-sky-200 font-bold">2º A</td>
+                                    <td className="p-2 border dark:border-gray-600 bg-amber-100 dark:bg-amber-900/50 text-amber-800 dark:text-amber-200 font-bold">5º B</td>
+                                    <td className="p-2 border dark:border-gray-600"></td>
+                                    <td className="p-2 border dark:border-gray-600 bg-violet-100 dark:bg-violet-900/50 text-violet-800 dark:text-violet-200 font-bold">4º A</td>
+                                </tr>
+                                <tr>
+                                    <td className="p-2 border dark:border-gray-600 font-medium text-gray-700 dark:text-gray-300">9:50 - 10:20</td>
+                                    <td className="p-2 border dark:border-gray-600 bg-gray-100 dark:bg-gray-800 font-medium text-gray-600 dark:text-gray-400" colSpan="5">RECESO</td>
+                                </tr>
+                                <tr>
+                                    <td className="p-2 border dark:border-gray-600 font-medium text-gray-700 dark:text-gray-300">10:20 - 11:20</td>
+                                    <td className="p-2 border dark:border-gray-600 bg-violet-100 dark:bg-violet-900/50 text-violet-800 dark:text-violet-200 font-bold">4º A</td>
+                                    <td className="p-2 border dark:border-gray-600 bg-emerald-100 dark:bg-emerald-900/50 text-emerald-800 dark:text-emerald-200 font-bold">3º B</td>
+                                    <td className="p-2 border dark:border-gray-600"></td>
+                                    <td className="p-2 border dark:border-gray-600"></td>
+                                    <td className="p-2 border dark:border-gray-600 bg-emerald-100 dark:bg-emerald-900/50 text-emerald-800 dark:text-emerald-200 font-bold">3º A</td>
+                                </tr>
+                                <tr>
+                                    <td className="p-2 border dark:border-gray-600 font-medium text-gray-700 dark:text-gray-300">11:20 - 12:15</td>
+                                    <td className="p-2 border dark:border-gray-600 bg-sky-100 dark:bg-sky-900/50 text-sky-800 dark:text-sky-200 font-bold">2º B</td>
+                                    <td className="p-2 border dark:border-gray-600 bg-amber-100 dark:bg-amber-900/50 text-amber-800 dark:text-amber-200 font-bold">5º A</td>
+                                    <td className="p-2 border dark:border-gray-600 bg-amber-100 dark:bg-amber-900/50 text-amber-800 dark:text-amber-200 font-bold">5º A</td>
+                                    <td className="p-2 border dark:border-gray-600 bg-emerald-100 dark:bg-emerald-900/50 text-emerald-800 dark:text-emerald-200 font-bold">3º B</td>
+                                    <td className="p-2 border dark:border-gray-600 bg-sky-100 dark:bg-sky-900/50 text-sky-800 dark:text-sky-200 font-bold">2º B</td>
+                                </tr>
+                                <tr>
+                                    <td className="p-2 border dark:border-gray-600 font-medium text-gray-700 dark:text-gray-300">12:15 - 12:30</td>
+                                    <td className="p-2 border dark:border-gray-600 bg-gray-100 dark:bg-gray-800 font-medium text-gray-600 dark:text-gray-400" colSpan="5">RECREO</td>
+                                </tr>
+                                <tr>
+                                    <td className="p-2 border dark:border-gray-600 font-medium text-gray-700 dark:text-gray-300">12:30 - 1:30</td>
+                                    <td className="p-2 border dark:border-gray-600 bg-sky-100 dark:bg-sky-900/50 text-sky-800 dark:text-sky-200 font-bold">2º A</td>
+                                    <td className="p-2 border dark:border-gray-600 bg-emerald-100 dark:bg-emerald-900/50 text-emerald-800 dark:text-emerald-200 font-bold">3º A</td>
+                                    <td className="p-2 border dark:border-gray-600 bg-violet-100 dark:bg-violet-900/50 text-violet-800 dark:text-violet-200 font-bold">4º B</td>
+                                    <td className="p-2 border dark:border-gray-600 bg-amber-100 dark:bg-amber-900/50 text-amber-800 dark:text-amber-200 font-bold">5º B</td>
+                                    <td className="p-2 border dark:border-gray-600"></td>
+                                </tr>
+                                <tr>
+                                    <td className="p-2 border dark:border-gray-600 font-medium text-gray-700 dark:text-gray-300">1:30 - 2:25</td>
+                                    <td className="p-2 border dark:border-gray-600"></td>
+                                    <td className="p-2 border dark:border-gray-600"></td>
+                                    <td className="p-2 border dark:border-gray-600"></td>
+                                    <td className="p-2 border dark:border-gray-600"></td>
+                                    <td className="p-2 border dark:border-gray-600"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
 
                     <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-100 dark:border-blue-800">
                         <p className="text-sm text-blue-800 dark:text-blue-200 text-center">

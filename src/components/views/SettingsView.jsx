@@ -54,6 +54,37 @@ export default function SettingsView() {
                 // 1. Extract text from PDF
                 const text = await extractTextFromPdf(file);
                 setStatusMessage('Procesando plan de estudios con IA...');
+
+                // 2. Process with Gemini
+                const structuredData = await processCurriculumWithAI(text, apiKey);
+
+                // 3. Update Local Storage
+                const existingData = JSON.parse(localStorage.getItem('custom_curriculum') || '{}');
+                let newData = { ...existingData };
+                let updatedGrades = [];
+
+                const processGradeData = (data) => {
+                    // Robust grade key extraction: get the first number found
+                    const gradeMatch = data.grade.match(/(\d+)/);
+                    const gradeKey = gradeMatch ? gradeMatch[0] : '2';
+                    newData[gradeKey] = data;
+                    updatedGrades.push(data.grade);
+                };
+
+                if (Array.isArray(structuredData)) {
+                    structuredData.forEach(processGradeData);
+                } else {
+                    processGradeData(structuredData);
+                }
+
+                localStorage.setItem('custom_curriculum', JSON.stringify(newData));
+
+                setStatusMessage(`¡Éxito! Plan de estudios actualizado para: ${updatedGrades.join(', ')}.`);
+            } else {
+                // Excel processing
+                setStatusMessage('Leyendo archivo Excel...');
+                const excelData = await extractDataFromExcel(file);
+
                 setStatusMessage('Procesando lista de alumnos con IA...');
                 // Pass the raw object to AI
                 const studentData = await processStudentListWithAI(excelData, apiKey);
