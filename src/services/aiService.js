@@ -2,20 +2,31 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 
 // Helper function for robust JSON parsing
 const robustJSONParse = (text) => {
-  // 1. Remove markdown code blocks
+  // 1. Remove markdown code blocks and whitespace
   let cleanText = text.replace(/```json/g, '').replace(/```/g, '').trim();
 
   try {
     return JSON.parse(cleanText);
   } catch (e) {
     console.warn('Direct JSON parse failed, trying regex extraction...', e);
-    // 2. Try to extract JSON object or array
-    const jsonMatch = cleanText.match(/(\{[\s\S]*\}|\[[\s\S]*\])/);
-    if (jsonMatch) {
+    // 2. Try to extract JSON object or array using a more specific regex
+    // This regex looks for the first [ or { and the last ] or }
+    const firstOpen = cleanText.search(/[\{\[]/);
+    const lastClose = cleanText.search(/[\]\}](?!.*[\]\}])/); // Last closing bracket/brace
+
+    if (firstOpen !== -1 && lastClose !== -1) {
+      const jsonCandidate = cleanText.substring(firstOpen, lastClose + 1);
       try {
-        return JSON.parse(jsonMatch[0]);
+        return JSON.parse(jsonCandidate);
       } catch (e2) {
-        throw new Error('Failed to parse extracted JSON: ' + e2.message);
+        // 3. Last resort: try to fix common JSON errors (very basic)
+        try {
+          // Replace unescaped newlines in strings (risky but common issue)
+          const fixedJson = jsonCandidate.replace(/(?<!\\)\n/g, "\\n");
+          return JSON.parse(fixedJson);
+        } catch (e3) {
+          throw new Error(`Failed to parse extracted JSON: ${e.message}. Candidate length: ${jsonCandidate.length}`);
+        }
       }
     }
     throw new Error('No valid JSON found in response.');
@@ -50,7 +61,7 @@ export const processCurriculumWithAI = async (text, apiKey) => {
     Actúa como un experto en educación y planificación curricular. Analiza el siguiente texto extraído de un PDF de planificación escolar y genera un JSON estructurado.
 
     TEXTO DEL PDF:
-    "${text}"
+    "${text.substring(0, 100000)}" 
 
     OBJETIVO:
     Extraer el plan de estudios completo. Si el PDF contiene múltiples grados (ej: 2º, 3º, 4º, 5º), genera un ARRAY de objetos JSON, uno por cada grado. Si es un solo grado, genera un solo objeto.
@@ -89,19 +100,22 @@ export const processCurriculumWithAI = async (text, apiKey) => {
                         "class2": "Resumen actividad secundaria"
                     }
                 ],
-                "concepts": "Resumen de conceptos clave (ej: 'Sumas, Restas, Vocabulario')",
-                "project": "Nombre del proyecto del trimestre (ej: 'Feria de Ciencias')",
-                "evaluation": "Criterios de evaluación (ej: 'Examen 50%, Proyecto 50%')"
+                "concepts": "Resumen de conceptos clave",
+                "project": "Nombre del proyecto",
+                "evaluation": "Criterios de evaluación"
             }
         ]
     }
 
-    REGLAS CRÍTICAS:
-    1. **MÚLTIPLES GRADOS**: Si detectas más de un grado, DEVUELVE UN ARRAY.
-    2. **FECHAS**: Debes generar un \`dateRange\` válido para CADA semana.
-    3. **HORARIO**: El campo \`schedule\` es OBLIGATORIO.
-    4. **AÑO**: Si el PDF no tiene año, asume el ciclo escolar actual.
-    5. Devuelve SOLO el JSON (Objeto o Array).
+    REGLAS CRÍTICAS DE FORMATO:
+    1. **VALID JSON**: Asegúrate de que el JSON sea perfectamente válido.
+    2. **ESCAPAR CARACTERES**: Escapa todas las comillas dobles dentro de los valores de cadena (ej: "proyecto": "El \\"Gran\\" Salto").
+    3. **SIN COMENTARIOS**: No incluyas comentarios // en el JSON final.
+    4. **SIN COMAS EXTRA**: No pongas comas al final del último elemento de un objeto o array.
+    5. **MÚLTIPLES GRADOS**: Si detectas más de un grado, DEVUELVE UN ARRAY.
+    6. **FECHAS**: Debes generar un \`dateRange\` válido para CADA semana.
+    7. **HORARIO**: El campo \`schedule\` es OBLIGATORIO.
+    8. Devuelve SOLO el JSON.
   `;
 
   try {
