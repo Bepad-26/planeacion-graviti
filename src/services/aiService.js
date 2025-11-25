@@ -53,11 +53,23 @@ export const processCurriculumWithAI = async (text, apiKey) => {
     "${text}"
 
     OBJETIVO:
-    Extraer el plan de estudios completo, incluyendo rangos de fechas EXACTOS para cada semana y el horario de clases.
+    Extraer el plan de estudios completo. Si el PDF contiene múltiples grados (ej: 2º, 3º, 4º, 5º), genera un ARRAY de objetos JSON, uno por cada grado. Si es un solo grado, genera un solo objeto.
 
-    ESTRUCTURA JSON REQUERIDA:
+    ESTRUCTURA JSON REQUERIDA (Ejemplo para múltiples grados):
+    [
+        {
+            "grade": "2º",
+            "trimesters": [ ... ]
+        },
+        {
+            "grade": "3º",
+            "trimesters": [ ... ]
+        }
+    ]
+
+    ESTRUCTURA JSON REQUERIDA (Ejemplo para un solo grado):
     {
-        "grade": "2º", // Infiere el grado
+        "grade": "2º",
         "trimesters": [
             {
                 "title": "Trimestre 1",
@@ -76,16 +88,20 @@ export const processCurriculumWithAI = async (text, apiKey) => {
                         "class1": "Resumen actividad principal",
                         "class2": "Resumen actividad secundaria"
                     }
-                ]
+                ],
+                "concepts": "Resumen de conceptos clave (ej: 'Sumas, Restas, Vocabulario')",
+                "project": "Nombre del proyecto del trimestre (ej: 'Feria de Ciencias')",
+                "evaluation": "Criterios de evaluación (ej: 'Examen 50%, Proyecto 50%')"
             }
         ]
     }
 
     REGLAS CRÍTICAS:
-    1. **FECHAS**: Debes generar un \`dateRange\` válido para CADA semana. Si el texto dice "Semana 1", asume que empieza en la fecha más lógica mencionada en el documento o a finales de Agosto.
-    2. **HORARIO**: El campo \`schedule\` es OBLIGATORIO. Si el PDF tiene un horario general, repítelo en todas las semanas. Si varía, adáptalo. NO dejes días vacíos.
-    3. **AÑO**: Si el PDF no tiene año, asume el ciclo escolar actual (2025-2026 o el que corresponda a la fecha actual).
-    4. Devuelve SOLO el JSON.
+    1. **MÚLTIPLES GRADOS**: Si detectas más de un grado, DEVUELVE UN ARRAY.
+    2. **FECHAS**: Debes generar un \`dateRange\` válido para CADA semana.
+    3. **HORARIO**: El campo \`schedule\` es OBLIGATORIO.
+    4. **AÑO**: Si el PDF no tiene año, asume el ciclo escolar actual.
+    5. Devuelve SOLO el JSON (Objeto o Array).
   `;
 
   try {
